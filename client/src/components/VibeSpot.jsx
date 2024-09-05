@@ -474,8 +474,8 @@ const VibeSpot = () => {
                   <div className="userMeta">
                     <img
                       src={
-                        userInfo?.userPicturePath !== ""
-                          ? userImageUrl + userInfo?.userPicturePath
+                        vibespotInfo.userId?.userPicturePath !== ""
+                          ? userImageUrl + vibespotInfo.userId?.userPicturePath
                           : avatar
                       }
                       alt={vibespotInfo.userId?.firstName}
