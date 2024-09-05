@@ -1,0 +1,36 @@
+.dashboardDiv {
+  width: 100%;
+  padding: 0 50px;
+  background-color: white;
+  position: relative;
+  top: 90px;
+}
+.dashboardDivMain {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  justify-content: end;
+}
+.leftDiv {
+  width: calc(20% - 20px);
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  left: 50px;
+  padding-right: 20px;
+}
+.centerDiv {
+  width: 60%;
+  position: relative;
+}
+.strechCenterDiv {
+  width: 80%;
+}
+.rightDiv {
+  width: 20%;
+  /* background-color: aqua; */
+  /* border: 1px solid #eee; */
+}
+.hidesideBar {
+  display: none;
+}

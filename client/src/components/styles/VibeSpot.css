@@ -1,0 +1,329 @@
+.onTopDiv {
+  position: relative;
+}
+.backgroundOverlay {
+  width: 100%;
+  background-color: #cecece73;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 35px;
+}
+.vibespotDiv {
+  width: 100%;
+
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+}
+.notFoundDiv {
+  width: 100%;
+  min-height: calc(100vh - 250px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.notFoundDiv img {
+  width: 75%;
+}
+.vibespotDivMain {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.mainContentBox {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.stretchMainBox {
+  width: 100%;
+}
+.commentDiv {
+  width: 35%;
+  background-color: #faf9fb;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.vibespotDivMain #map {
+  min-height: 580px;
+  border-radius: 15px;
+  width: 35%;
+  z-index: 1;
+}
+.vibespotDivMain .headingDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.vibespotDivMain .headingDiv p {
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.vibespotDivMain span {
+  color: #570de6;
+}
+/* .vibespotDivMain .metaDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+} */
+.vibespotDivMain .metaDiv p {
+  font-size: 14px;
+  color: #333;
+  font-weight: 700;
+}
+.vibespotDivMain .metaDiv img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+.vibespotDivMain .metaDiv .userMeta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: 8px;
+}
+.vibespotDivMain .desDiv {
+  min-width: 100%;
+}
+.vibespotDivMain .desDiv p {
+  font-size: 15px;
+  line-height: 25px;
+  color: #333333;
+  text-align: justify;
+}
+.carouselBox {
+  width: 100%;
+}
+.carouselBox .splide__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+  cursor: grab;
+}
+.carouselBox .splideCarouselBox {
+  width: 100%;
+}
+.ratingDiv {
+  display: flex;
+  align-items: end;
+  justify-content: start;
+  font-size: 15px;
+  margin-top: -15px;
+  color: #333333;
+}
+.star-rating {
+  margin: -5px 8px;
+  font-size: 24px;
+}
+.infoDiv span {
+  font-weight: 700;
+  color: #333333;
+}
+.infoDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.actionsDiv {
+  display: flex;
+  flex-direction: row;
+  color: #333333;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  gap: 20px;
+}
+.actionsDiv .likeDiv {
+  background-color: #ed332617;
+  width: 33%;
+  padding: 13px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.likeDiv .heartFill {
+  color: #ed3326;
+  width: 20px;
+  height: 20px;
+}
+.likeDiv .heartLine {
+  color: #ed3326;
+  width: 20px;
+  height: 20px;
+}
+.actionsDiv .commentMapDiv {
+  background-color: #570de61f;
+  width: 33%;
+  padding: 13px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  justify-self: stretch;
+  gap: 8px;
+}
+.commentMapDiv .commentLine {
+  color: #570de6;
+  width: 22px;
+  height: 22px;
+  margin-top: 3px;
+}
+.actionsDiv .visitedDiv {
+  background-color: #00800030;
+  width: 33%;
+  padding: 13px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.visitedDiv .locationFill {
+  color: green;
+  width: 22px;
+  height: 22px;
+}
+.visitedDiv .locationLine {
+  color: green;
+  width: 22px;
+  height: 22px;
+}
+.stretchedDiv {
+  width: 100% !important;
+}
+.commentDiv .commentInputBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.commentInputBox img {
+  width: 42px;
+  height: 42px;
+  background-color: #faf9fb;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+.commentInputBox input {
+  width: 100%;
+  font-size: 15px;
+  border-radius: 10px;
+  color: #333333;
+  background-color: white;
+  border: none;
+  padding: 8px 16px;
+  margin-left: 8px;
+}
+.commentInputBox button {
+  font-size: 15px;
+  background-color: #570de6;
+  border-radius: 10px;
+  color: #faf9fb;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+}
+.commentInputBox .postIcon {
+  width: 20px;
+  height: 20px;
+  margin: 8px;
+  display: flex;
+  align-items: center;
+}
+.logInMessage {
+  text-align: center;
+  font-weight: 700;
+}
+.commentDiv .commentDisplayBox {
+  min-height: calc(100% - 88px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.commentDiv .commentList {
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 15px;
+}
+.commentList .commentBox {
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 10px;
+  padding: 10px;
+}
+.commentBox .dp {
+  min-width: 42px;
+  min-height: 42px;
+}
+.commentList .commentBox img {
+  width: 42px;
+  height: 42px;
+  background-color: #faf9fb;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  font-size: 10px;
+}
+.comment .userMeta p {
+  color: #797979;
+  font-size: 12px;
+}
+.comment .userComment p {
+  font-size: 14px;
+  color: #333333;
+  margin-top: 3px;
+}
+.commentDiv .commentPagination {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+.commentDiv .arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.commentPagination div {
+  background-color: #570de6;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+}

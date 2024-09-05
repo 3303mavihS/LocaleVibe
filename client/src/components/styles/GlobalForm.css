@@ -1,0 +1,401 @@
+.formBox {
+  position: relative;
+}
+.formDiv {
+  width: 720px;
+  margin: auto;
+  background-color: #fff;
+  border-radius: 11px;
+  box-shadow: 11px 11px 22px #ededed, -11px -11px 22px #ffffff;
+  justify-content: center;
+  z-index: 1;
+}
+.formDivMain {
+  padding: 80px 80px 90px 80px;
+  text-align: center;
+}
+form {
+  text-align: left;
+  width: 90%;
+  margin: 0 auto;
+}
+input {
+  width: 100%;
+}
+.formDiv h2 {
+  font-size: 30px;
+}
+.error {
+  font-size: 11px;
+  color: #570de6;
+  position: relative;
+  top: 17px;
+  left: 15px;
+  z-index: 2;
+  font-weight: 700;
+}
+.formDiv span {
+  color: #570de6;
+}
+.formDiv input {
+  font-size: 15px;
+  padding: 16px 30px;
+  margin-top: 20px;
+  border-radius: 15px;
+  background-color: #faf9fb;
+  border: none;
+  border-color: #570de6;
+}
+.formDiv button {
+  width: 180px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  font-size: 16px;
+  padding: 15px 30px;
+  border-radius: 15px;
+  background-color: #570de6;
+  border: none;
+  border-color: #570de6;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+}
+.formDiv .searchIcon {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+.formDiv .passwordBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.formDiv .togglePassword {
+  width: 41px;
+  height: 41px;
+  background-color: #570de6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-left: -48px;
+  cursor: pointer;
+}
+.formDiv .forgetPasswordBox {
+  width: 100%;
+  text-align: right;
+  margin-top: 15px;
+}
+.formDiv .twoBoxDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.formDiv .usernameBox {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.formDiv .checkValidity {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  top: -40px;
+  right: 15px;
+  margin-bottom: -23px;
+  cursor: pointer;
+  gap: 25px;
+}
+.formDiv .profileBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 0 20px 0;
+}
+.formDiv .useruploadedpic {
+  border-radius: 50%;
+  background-color: #faf9fb;
+  width: 86px;
+  height: 86px;
+}
+.formDiv .profileBox img {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.formDiv .profileBox .editProfilePic {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  top: -38px;
+  left: 33px;
+  background: #5616e5;
+  color: white;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.messageBox {
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #cecece73;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+}
+.messageBox .message {
+  width: 400px;
+  background-color: white;
+  border-radius: 15px;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+.messageBox .message p {
+  font-weight: 700;
+  font-size: 17px;
+}
+.messageBox .message span {
+  color: #570de6;
+}
+.messageBox button {
+  width: 180px;
+  font-size: 16px;
+  padding: 15px 30px;
+  border-radius: 15px;
+  background-color: #570de6;
+  border: none;
+  border-color: #570de6;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+}
+
+/* AddVibeSpot */
+.vibeForm {
+  width: 100%;
+}
+.vibeForm form {
+  width: 100%;
+}
+.formDiv .headingIcon {
+  width: 30px;
+  height: 30px;
+  margin-top: -3px;
+  margin-right: 8px;
+}
+.formDiv textarea {
+  width: 100%;
+  font-size: 15px;
+  padding: 16px 30px;
+  margin-top: 20px;
+  border-radius: 15px;
+  background-color: #faf9fb;
+  border: none;
+  border-color: #570de6;
+}
+
+.formDiv .formRadioBox {
+  width: 100%;
+  font-size: 15px;
+  border: 1px solid #e1e1e1;
+  margin-top: 20px;
+  border-radius: 15px;
+}
+.formDiv .formRadioBox p {
+  background-color: rgb(255, 255, 255);
+  margin-top: -27px;
+  width: 190px;
+  text-align: center;
+}
+.formDiv .formRadioBox .formRadioOptions {
+  padding: 30px 20px 18px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  justify-content: start;
+}
+.formDiv .formRadioBox .formRadioOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Add spacing between the labels */
+}
+
+.formDiv .formRadioBox .formRadioOptions div {
+  background-color: #faf9fb;
+  padding: 12px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for the labels */
+.formDiv .formRadioBox .formRadioOptions div:hover {
+  background-color: #570de6;
+  color: white;
+}
+.formRadioOptions .active {
+  background-color: #570de6 !important;
+  color: white;
+}
+
+/* Hide the radio input */
+.formDiv .formRadioBox .formRadioOptions input[type="radio"] {
+  display: none;
+}
+.formDiv .uploadImageBox {
+  width: 100%;
+  background-color: #faf9fb;
+  border-radius: 15px;
+  padding: 10px;
+}
+.formDiv .uploadImageBoxMain {
+  border-radius: 10px;
+  border: 3px dashed #e1e1e1;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.formDiv .uploadImageBoxMain .uploadIcon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 15px;
+}
+.formDiv .mainBox {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 20px;
+}
+.formDiv .mainBox .inputBox {
+  width: 70%;
+}
+.formDiv .mainBox #map {
+  min-height: 580px;
+  border-radius: 15px;
+  width: 30%;
+  z-index: 1;
+}
+.formDiv .locationBtns {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 80px;
+  z-index: 2;
+}
+.formDiv .locationBtns .refresh {
+  height: 35px;
+  background-color: #570de6;
+  color: white;
+  padding: 7px 20px;
+  margin: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.formDiv .locationBtns .pickLocationIcon {
+  width: 35px;
+  height: 35px;
+  background-color: #570de6;
+  color: white;
+  padding: 6px;
+  margin: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.modalBox {
+  width: 90% !important;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 15px;
+  padding: 50px;
+}
+
+.messageBox .uploadImageBox {
+  width: 100%;
+  background-color: #faf9fb;
+  border-radius: 15px;
+  padding: 10px;
+}
+.messageBox .uploadImageBoxMain {
+  border-radius: 10px;
+  border: 3px dashed #e1e1e1;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.messageBox .uploadImageBoxMain .uploadIcon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 15px;
+}
+
+.messageBox .modalBox .uploadedImages {
+  width: 100%;
+  border-radius: 15px;
+}
+.modalBox .uploadedImages .previewBox {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+.modalBox .uploadedImages .previewBox .preview {
+  width: 24%;
+}
+.modalBox .uploadedImages .previewBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 10px;
+}
+.modalBox .btnBox {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+.modalBox .btnBox div {
+  color: white;
+  background-color: #570de6;
+  font-size: 15px;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}

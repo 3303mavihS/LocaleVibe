@@ -1,0 +1,21 @@
+.listMainDiv {
+  padding: 0 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.listMainDiv .headingBox h3 {
+  font-size: 17px;
+}
+.listMainDiv .listBox {
+  background-color: #faf9fb;
+  border-radius: 15px;
+  padding: 10px;
+  max-height: 1000px;
+}
+.listMainDiv .listWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}

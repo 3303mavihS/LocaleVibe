@@ -1,0 +1,9 @@
+.rightSideBarDiv {
+  width: 100%;
+}
+.rightSideBarDivMain {
+  display: flex;
+  min-height: 88vh;
+  flex-direction: column;
+  justify-content: space-between;
+}

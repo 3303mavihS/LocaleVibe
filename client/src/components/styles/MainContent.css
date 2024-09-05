@@ -1,0 +1,10 @@
+.mainContentDiv {
+  width: 100%;
+  min-height: 89vh;
+  background-color: #faf9fb;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+.mainContentDivMain {
+  padding: 20px;
+}
