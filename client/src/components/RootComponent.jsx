@@ -13,27 +13,27 @@ import {
 const RootComponent = () => {
   const dispatch = useDispatch();
 
-  const getUserInfo = async (userId, userToken) => {
-    try {
-      const url = serverGetUserDataUrl + userId;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-
-      const data = await response.json();
-      sessionStorage.setItem("SessionInfo", JSON.stringify(data));
-      dispatch(setCurrentUser(data));
-    } catch (error) {
-      console.error("error_message : ", error.message);
-    }
-  };
-
   useEffect(() => {
     const loggedIn = localStorage.getItem("LoggedIn") === "true";
+
+    const getUserInfo = async (userId, userToken) => {
+      try {
+        const url = serverGetUserDataUrl + userId;
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+
+        const data = await response.json();
+        sessionStorage.setItem("SessionInfo", JSON.stringify(data));
+        dispatch(setCurrentUser(data));
+      } catch (error) {
+        console.error("error_message : ", error.message);
+      }
+    };
 
     if (loggedIn) {
       const token = localStorage.getItem("Token");

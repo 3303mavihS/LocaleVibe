@@ -12,7 +12,7 @@ import {
 import { setCurrentUser } from "../features/loginReducer";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
 import { setLikes, setVisitedBy } from "../features/vibespotInfoReducer";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { FaRegMap } from "react-icons/fa6";
@@ -52,7 +52,7 @@ const VibeSpot = () => {
    * All the Constants
    */
   const { vibespotId } = useParams();
-
+  const navigate = useNavigate();
   //Map url Formation
   //https://maps.google.com/maps?saddr=28.612894,77.229446&daddr=28.4622848,77.053952
   const mapURL =
@@ -150,16 +150,13 @@ const VibeSpot = () => {
     }
   };
 
-  // Assuming likes is an array of user objects with an _id field
-  const isLiked = vibespotInfo.likes?.some((like) => like._id === userInfo._id);
-  const [liked, setLiked] = useState(isLiked);
+  const [liked, setLiked] = useState(false);
   //like post by sending userId and vibespotId
   const likeVibeSpot = async () => {
-    if (!isLiked) {
+    if (!liked) {
       try {
         const userId = userInfo._id;
         const url = `${serverLikeVibeSpot}/${vibespotId}`;
-        console.log("Isliked : ", isLiked);
         const response = await fetch(url, {
           method: "POST",
           headers: {
@@ -188,19 +185,14 @@ const VibeSpot = () => {
   };
 
   // checking visited vibespot has the userId in the visited By places
-  //let isVisited = vibespotInfo.visitedBy?.some((by) => by === userInfo._id);
-  const isVisited = vibespotInfo.visitedBy?.some(
-    (by) => by._id === userInfo._id
-  );
-  const [visited, setVisited] = useState(isVisited);
-  console.log("isVisited : ", isVisited);
+
+  const [visited, setVisited] = useState(false);
   //set visit post by sending userId and vibespotId
   const visitVibeSpot = async () => {
-    if (!isVisited) {
+    if (!visited) {
       try {
         const userId = userInfo._id;
         const url = `${serverVisitVibeSpot}/${vibespotId}`;
-        console.log("Is Visited : ", isVisited);
         const response = await fetch(url, {
           method: "POST",
           headers: {
@@ -292,12 +284,26 @@ const VibeSpot = () => {
           if (data.comments.length > 0) {
             // Initialize commentEnd to the total length of the comments
             setCommentEnd(data.comments.length);
-
             // Initialize commentStart to 7 comments before the end, ensuring it doesn't go below 0
             setCommentStart(Math.max(data.comments.length - 7, 0));
-            console.log("Start : ", Math.max(data.comments.length - 7, 0));
-            console.log("End : ", data.comments.length);
+
+            // console.log("Start : ", Math.max(data.comments.length - 7, 0));
+            // console.log("End : ", data.comments.length);
           }
+
+          const userInfoFromSession = JSON.parse(
+            sessionStorage.getItem("SessionInfo")
+          );
+          const isLiked = data.likes.some(
+            (like) => like._id === userInfoFromSession._id
+          );
+          console.log("isLiked : ", isLiked);
+          setLiked(isLiked);
+          const isVisited = data.visitedBy.some(
+            (by) => by._id === userInfoFromSession._id
+          );
+          console.log("isVisited : ", isVisited);
+          setVisited(isVisited);
 
           //dispatch the likes list and visited By list to global states
           dispatch(setLikes(data.likes));
@@ -350,8 +356,6 @@ const VibeSpot = () => {
     if (commentError) {
       setTimeout(() => setCommentError(false), 5000);
     }
-    console.log("Start : ", commentStart);
-    console.log("End : ", commentEnd);
   }, [commentSuccess, commentError, vibespotId, vibespotFound]); // Run when vibespotId changes
 
   const dateOnly = date.split("T")[0];
@@ -499,10 +503,14 @@ const VibeSpot = () => {
                       className="likeDiv"
                       onClick={() => {
                         likeVibeSpot();
+                        navigate(`/vibespot/${vibespotId}/likes`);
+                        setShowComment(!showComment);
+                        setShowMap(!showMap);
+                        dispatch(setVisibleRightSideBar(false));
                       }}
                     >
-                      {!liked && <FaHeart className="heartFill" />}
-                      {liked && <FaRegHeart className="heartLine" />}
+                      {liked && <FaHeart className="heartFill" />}
+                      {!liked && <FaRegHeart className="heartLine" />}
                       Like
                     </div>
                   )}
@@ -531,9 +539,18 @@ const VibeSpot = () => {
                   </div>
 
                   {isLoggedIn && (
-                    <div className="visitedDiv" onClick={() => visitVibeSpot()}>
-                      {visited && <RiMapPin5Line className="locationLine" />}
-                      {!visited && <RiMapPin5Fill className="locationFill" />}
+                    <div
+                      className="visitedDiv"
+                      onClick={() => {
+                        visitVibeSpot();
+                        navigate(`/vibespot/${vibespotId}/visited-by`);
+                        setShowComment(!showComment);
+                        setShowMap(!showMap);
+                        dispatch(setVisibleRightSideBar(false));
+                      }}
+                    >
+                      {visited && <RiMapPin5Fill className="locationFill" />}
+                      {!visited && <RiMapPin5Line className="locationLine" />}
                       Already Visited
                     </div>
                   )}
