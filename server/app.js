@@ -160,7 +160,7 @@ const userUpload = multer({
  */
 /**
  * here post request is made to the route or url
- * with token received in bearer
+ * with token received as bearer
  * then upload.array will do this req 4 times
  * and it will call the function
  * that is being allowed to run because verifyToken

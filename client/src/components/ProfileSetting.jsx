@@ -334,7 +334,6 @@ const ProfileSetting = () => {
                 ref={fileUploadRef}
                 onChange={uploadImageForDisplay}
                 hidden
-                multiple
                 accept="image/png, image/jpeg"
               />
             </div>
