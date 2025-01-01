@@ -101,7 +101,7 @@ const ProfileSetting = () => {
   const uploadImageForDisplay = () => {
     const file = fileUploadRef.current.files[0]; // This is a FileList
 
-    // Create array of image URLs
+    // Create array of image URLs to use them to display the selected images
     const imageUrl = URL.createObjectURL(file);
 
     // Set image URLs in state

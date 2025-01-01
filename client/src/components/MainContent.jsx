@@ -11,6 +11,7 @@ import SignIn from "./SignIn";
 import { useSelector } from "react-redux";
 import ProfileSetting from "./ProfileSetting";
 import VibeSpot from "./VibeSpot";
+import YourVibeSpot from "./YourVibeSpot";
 
 const MainContent = () => {
   const isLoggedIn = useSelector((state) => state.auth.loginSession);
@@ -35,10 +36,7 @@ const MainContent = () => {
             path="/dashboard/vibespot/:vibespotId"
             element={<VibeSpotPost />}
           />
-          <Route
-            path="/dashboard/your-vibespots"
-            element={<VibeSpotPostList />}
-          />
+          <Route path="/dashboard/your-vibespots" element={<YourVibeSpot />} />
           <Route
             path="/dashboard/liked-vibespots"
             element={<VibeSpotPostList />}

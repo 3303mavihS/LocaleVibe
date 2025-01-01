@@ -150,7 +150,7 @@ const userUpload = multer({
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
     }
   },
 });
