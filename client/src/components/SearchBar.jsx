@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "../components/styles/SearchBar.css";
 import { RiSearchLine } from "react-icons/ri";
 
-const SearchBar = ({ query, placeholder }) => {
+const SearchBar = ({ query, placeholder, inputbackgroundColor }) => {
+  // console.log(inputbackgroundColor);
   const [queryInput, setQueryInput] = useState("");
   query = queryInput;
   return (
@@ -16,6 +17,7 @@ const SearchBar = ({ query, placeholder }) => {
           setQueryInput(e.target.value);
           console.log(e.target.value);
         }}
+        style={{ background: inputbackgroundColor }}
       />
       <button>
         <RiSearchLine className="searchIcon" />

@@ -9,18 +9,20 @@ const mainDomain = "http://localhost:3001";
 export const googleMapSearchUrl =
   "https://www.google.com/maps/search/?api=1&query=";
 
+//to access the uploaded files
 export const userImageUrl = mainDomain + "/public/uploads/";
 export const vibespotImageUrl = mainDomain + "/public/";
 
 //available Url Hit
 export const serverCheckUserNameAvailabilityUrl =
-  mainDomain + "/check-username?username=";
+  mainDomain + "/user/check-username?username=";
 
 //server-side profile-setting url
-export const serverProfileSettingUrl = mainDomain + "/profile-setting";
+export const serverProfileSettingUrl = mainDomain + "/user/profile-setting";
 
 //available Url Hit
-export const serverCheckDuplicateEmailUrl = mainDomain + "/check-email?email=";
+export const serverCheckDuplicateEmailUrl =
+  mainDomain + "/user/check-email?email=";
 
 //server-side signup url
 export const serverSignUpUrl = mainDomain + "/auth/signup";
@@ -44,10 +46,17 @@ export const serverUserImageUploadUrl = mainDomain + "/profile-setting/upload";
 export const serverVibeSpotUrl = mainDomain + "/vibespot";
 
 //server-side post comment url
-export const serverPostComment = mainDomain + "/post-comment";
+export const serverPostComment = mainDomain + "/dashboard/post-comment";
 
 //server-side like the post
-export const serverLikeVibeSpot = mainDomain + "/like-vibespot";
+export const serverLikeVibeSpot = mainDomain + "/dashboard/like-vibespot";
 
 //server-side visit the post
-export const serverVisitVibeSpot = mainDomain + "/visit-vibespot";
+export const serverVisitVibeSpot = mainDomain + "/dashboard/visit-vibespot";
+
+//server-side fetch all the vibespots of the user using userId
+export const serverFetchMyVibeSpots = mainDomain + "/dashboard/user-vibespots";
+export const serverFetchLikedVibeSpots =
+  mainDomain + "/dashboard/liked-vibespots";
+export const serverFetchVisitedVibeSpots =
+  mainDomain + "/dashboard/visited-vibespots";

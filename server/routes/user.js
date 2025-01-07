@@ -1,5 +1,10 @@
 import express from "express";
-import { getUserData } from "../controllers/user.js";
+import {
+  checkDuplicateEmail,
+  checkValidUsername,
+  getUserData,
+  updateUserProfile,
+} from "../controllers/user.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -8,11 +13,13 @@ const router = express.Router();
  * read
  * TODO i have to call the functions from user controllers
  */
+router.get("/check-username", checkValidUsername);
+router.get("/check-email", checkDuplicateEmail);
 router.get("/user-data/:userId", verifyToken, getUserData);
 
 /**
  * update
  */
-//router.patch("/:params/:params",verifyToken,updateFunction);
+router.post("/profile-setting/:userId", verifyToken, updateUserProfile);
 
 export default router;

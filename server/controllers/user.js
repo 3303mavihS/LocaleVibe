@@ -80,3 +80,56 @@ export const getUserFriends = async (req, res) => {
     res.status(404).json({ error_message: err.error_message });
   }
 };
+
+//update user profile
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const updatedData = req.body;
+    console.log("request received");
+    // Update the user in the database
+    const updateUserData = await User.findByIdAndUpdate(
+      userId,
+      updatedData, // The fields to update
+      { new: true, runValidators: true } // Return the updated user and run any validators
+    );
+    // Respond with the updated user data
+    res.status(200).json(updateUserData);
+  } catch (err) {
+    res.status(500).json({ error_message: err.message });
+  }
+};
+
+// check the valid username
+export const checkValidUsername = async (req, res) => {
+  try {
+    const { username } = req.query;
+    const usernameExist = await User.findOne({ username: username });
+    if (usernameExist) {
+      console.log("username already exist");
+      return res.json({ isAvailable: false });
+    } else {
+      console.log("username available");
+      return res.json({ isAvailable: true });
+    }
+  } catch (err) {
+    res.status(500).json({ error_message: err.message });
+  }
+};
+
+//check the duplicate email address
+export const checkDuplicateEmail = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const emailExist = await User.findOne({ email: email });
+    if (!emailExist) {
+      console.log("email already exist");
+      return res.json({ isDuplicate: false });
+    } else {
+      console.log("new email");
+      return res.json({ isDuplicate: true });
+    }
+  } catch (err) {
+    res.status(500).json({ error_message: err.message });
+  }
+};

@@ -16,7 +16,7 @@ const Navigation = () => {
     <div className="navOptions">
       <NavLink to="/">
         <RxDashboard className="navIcon" />
-        Your Feed
+        My Feed
       </NavLink>
       <NavLink to="/dashboard/add-vibespot">
         <PiMapPinAreaBold className="navIcon" /> Add New VibeSpot
@@ -25,9 +25,9 @@ const Navigation = () => {
         <BsPersonCheck className="navIcon" />
         Friends
       </NavLink>
-      <NavLink to="/dashboard/your-vibespots">
+      <NavLink to="/dashboard/my-vibespots">
         <GrMapLocation className="navIcon" />
-        Your VibeSpots
+        My VibeSpots
       </NavLink>
       <NavLink to="/dashboard/liked-vibespots">
         <BiLike className="navIcon" />

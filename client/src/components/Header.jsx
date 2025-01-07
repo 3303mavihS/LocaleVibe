@@ -3,7 +3,7 @@ import { MdShareLocation } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdDashboard } from "react-icons/md";
 import { avatar } from "../constants/images";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "./SearchBar";
 import "../components/styles/Header.css";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const [query, setQuery] = useState("");
   const [showSideBar, setShowSideBar] = useState(true);
   const [downClicked, setDownClicked] = useState(false);
   const showOption = useSelector((state) => state.auth.loginSession);
@@ -39,7 +40,11 @@ const Header = () => {
         </div>
 
         <div className="searchDiv">
-          <SearchBar />
+          <SearchBar
+            query={query}
+            placeholder={"Seach Here"}
+            inputbackgroundColor={"#faf9fb"}
+          />
         </div>
 
         <div className="profileDiv ">

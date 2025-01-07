@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { serverVibeSpotImageUploadUrl } from "../services/apicalls";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { serverAddVibeSpotUrl } from "../services/apicalls";
 import { HiOutlineViewGridAdd } from "react-icons/hi";
 import { ImUpload } from "react-icons/im";
@@ -10,6 +10,7 @@ import { TbCurrentLocation } from "react-icons/tb";
 import { RiFullscreenFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { setVisibleRightSideBar } from "../features/headerElementReducer";
 
 const AddVibeSpot = () => {
   const [serverCode, setServerCode] = useState(0);
@@ -20,7 +21,8 @@ const AddVibeSpot = () => {
   const [locationPicked, setLocationPicked] = useState(false);
   const userInfo = useSelector((state) => state.auth.currentUser);
   const userToken = useSelector((state) => state.auth.sessionToken);
-
+  const dispatch = useDispatch();
+  dispatch(setVisibleRightSideBar(true));
   //GeoLoaction Options
   const options = {
     enableHighAccuracy: true,
@@ -182,7 +184,10 @@ const AddVibeSpot = () => {
         const data = await response.json();
         setVibeSpotImagePath(data.imagePaths);
         setImageUploaded(true);
+        setServerCode(response.status);
         // console.log(data.imagePaths[0]);
+      } else {
+        setServerCode(response.status);
       }
     } catch (err) {
       console.log("error_message : ", err.message);
@@ -193,15 +198,20 @@ const AddVibeSpot = () => {
     <div className="formBox">
       <div className="formDiv vibeForm">
         <div className="formDivMain">
-          <h2
-            style={{ textAlign: "left", display: "flex", alignItems: "center" }}
-          >
-            <HiOutlineViewGridAdd className="headingIcon" />
-            Add New &nbsp;<span>Locale VibeSpot</span>
-          </h2>
           <form onSubmit={handleSubmit(submiteVibeSpotInfo)}>
             <div className="mainBox">
               <div className="inputBox">
+                <h2
+                  style={{
+                    textAlign: "left",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <HiOutlineViewGridAdd className="headingIcon" />
+                  Add New &nbsp;<span>Locale VibeSpot</span>
+                </h2>
                 <div className="uploadImageBox">
                   <div className="uploadImageBoxMain" onClick={openModalBox}>
                     <p style={{ fontWeight: "700", textAlign: "center" }}>
@@ -246,73 +256,73 @@ const AddVibeSpot = () => {
                     <div className="formRadioOptions">
                       <div
                         className={`radioOption ${
-                          category === "bakery" ? "active" : ""
+                          category === "Bakery" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("bakery")}
+                        onClick={() => handleClick("Bakery")}
                       >
                         Bakery
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "cafe" ? "active" : ""
+                          category === "Cafe" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("cafe")}
+                        onClick={() => handleClick("Cafe")}
                       >
                         Cafe
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "diner" ? "active" : ""
+                          category === "Diner" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("diner")}
+                        onClick={() => handleClick("Diner")}
                       >
                         Diner
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "food-court" ? "active" : ""
+                          category === "Food Court" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("food-court")}
+                        onClick={() => handleClick("Food Court")}
                       >
                         Food Court
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "hangout-place" ? "active" : ""
+                          category === "Hangout Place" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("hangout-place")}
+                        onClick={() => handleClick("Hangout Place")}
                       >
                         Hangout Place
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "meetup-point" ? "active" : ""
+                          category === "Meetup Point" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("meetup-point")}
+                        onClick={() => handleClick("Meetup Point")}
                       >
                         MeetUp Point
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "night-club" ? "active" : ""
+                          category === "Night Club" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("night-club")}
+                        onClick={() => handleClick("Night Club")}
                       >
                         Night Club
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "park" ? "active" : ""
+                          category === "Park" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("park")}
+                        onClick={() => handleClick("Park")}
                       >
                         Park
                       </div>
                       <div
                         className={`radioOption ${
-                          category === "restaurant" ? "active" : ""
+                          category === "Restaurant" ? "active" : ""
                         }`}
-                        onClick={() => handleClick("restaurant")}
+                        onClick={() => handleClick("Restaurant")}
                       >
                         Restaurant
                       </div>
@@ -436,13 +446,19 @@ const AddVibeSpot = () => {
               <p>
                 <span>VibeSpot</span> Saved Successfully!!!
               </p>
-              <Link to="../dashboard/your-vibespots">
+              <Link to="../dashboard/my-vibespots">
                 <button>View All</button>
               </Link>
             </div>
           )}
+
           {openModal && (
             <div className="modalBox">
+              {serverCode === 500 && (
+                <p style={{ textAlign: "center" }}>
+                  <span>File Size </span> exceed limit!
+                </p>
+              )}
               {imageSelected && (
                 <div className="uploadedImages">
                   <div className="previewBox">

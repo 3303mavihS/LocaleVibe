@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { serverSignInUrl } from "../services/apicalls";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
-const SignIn = () => {
+const SignIn = ({ redirectURL }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const getPrevUser = localStorage.getItem("CurrentUser") || "";
@@ -52,7 +52,11 @@ const SignIn = () => {
           "SessionInfo",
           JSON.stringify(received_response.user)
         );
-        navigate("/");
+        if (redirectURL === "") {
+          navigate("/");
+        } else {
+          navigate(redirectURL);
+        }
       }
     } catch (err) {
       console.log("error_message : ", err.message);
@@ -157,13 +161,21 @@ const SignIn = () => {
           </form>
         </div>
       </div>
-      {serverCode === 400 && (
+      {serverCode !== 200 && serverCode !== 0 && (
         <div className="messageBox">
           <div className="message">
-            <p style={{ textAlign: "center" }}>
-              Incorrect
-              <span> Username or Password</span>
-            </p>
+            {serverCode === 400 && (
+              <p style={{ textAlign: "center" }}>
+                Incorrect
+                <span> Username or Password</span>
+              </p>
+            )}
+            {serverCode === 500 && (
+              <p style={{ textAlign: "center" }}>
+                Something went
+                <span> Wrong</span>
+              </p>
+            )}
             <div style={{ display: "flex", gap: "10px" }}>
               <button onClick={() => setServerCode(0)}>Try Again</button>
               <Link to="../auth/sign-up">
