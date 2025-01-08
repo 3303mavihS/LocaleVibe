@@ -9,9 +9,7 @@ import {
   serverLikeVibeSpot,
   serverVisitVibeSpot,
 } from "../services/apicalls";
-import { setCurrentUser } from "../features/loginReducer";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
-import { setLikes, setVisitedBy } from "../features/vibespotInfoReducer";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
@@ -31,6 +29,7 @@ import InfoList from "./InfoList";
 
 const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   let vibespotId;
+  let showBackButton;
   //http://localhost:3000/vibespot/66cb91327110738fb2ce151f
   const { paramsId } = useParams();
   // console.log(paramsId);
@@ -39,11 +38,12 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
    */
   const [vibespotFound, setVibespotFound] = useState(true);
   const [vibespotInfo, setVibespotInfo] = useState({});
+  const [showSideBar, setShowSideBar] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [visited, setVisited] = useState(false);
   const [likesList, setlikesList] = useState([]);
-  const [visitedByList, setVisitedByList] = useState([]);
   const [showLikedByList, setShowLikedByList] = useState(false);
+  const [visited, setVisited] = useState(false);
+  const [visitedByList, setVisitedByList] = useState([]);
   const [showVisitedByList, setShowVisitedByList] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [commentInput, setCommentInput] = useState("");
@@ -51,7 +51,6 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   const [commentSuccess, setCommentSuccess] = useState(false);
   const [commentStart, setCommentStart] = useState();
   const [commentEnd, setCommentEnd] = useState();
-  const [showSideBar, setShowSideBar] = useState(false);
   const [showMap, setShowMap] = useState(true);
   const [locationPicked, setLocationPicked] = useState(false);
   const [position, setPosition] = useState([28.612894, 77.229446]); // Initialize position directly
@@ -60,8 +59,10 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
   if (id === "" || id === undefined || id === null) {
     vibespotId = paramsId;
+    showBackButton = false;
   } else {
     vibespotId = id;
+    showBackButton = true;
   }
   // console.log("vibespot :", vibespotId);
 
@@ -111,7 +112,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
          */
         setVibespotInfo(data);
         setlikesList(data.likes);
-        setVisitedByList(data.visited_by);
+        setVisitedByList(data.visitedBy);
         setDate(data.updatedAt);
 
         // Make sure location coordinates exist before setting position
@@ -284,6 +285,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     try {
       const userId = userInfo._id;
       const url = `${serverVisitVibeSpot}/${vibespotId}`;
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -340,7 +342,6 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
   //useEffect to synchronize the ui according to data loading
   useEffect(() => {
-    console.log(visitedByList?.length);
     /**
      * Call the function in useEffect show the updated data
      */
@@ -403,17 +404,19 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
           >
             <div className="headingDiv">
               <div style={{ display: "flex", alignItems: "center" }}>
-                <IoIosArrowDropleftCircle
-                  style={{
-                    width: "32px",
-                    height: "32px",
-                    marginRight: "10px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setShowModal(false);
-                  }}
-                />
+                {showBackButton && (
+                  <IoIosArrowDropleftCircle
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      marginRight: "10px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      setShowModal(false);
+                    }}
+                  />
+                )}
                 <h1>{vibespotInfo.title}</h1>
                 <div className="ratingDiv">
                   <div className="star-rating">
@@ -533,19 +536,25 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
                     // only work when logged in
                     toggleLikeVibeSpot();
                   }
-                  dispatch(setVisibleRightSideBar(true));
-                  if (showSideBar === false) {
-                    setShowSideBar(!showSideBar);
-                  }
-                  setShowLikedByList(true);
-                  setShowVisitedByList(false);
-                  setShowComment(false);
-                  setShowMap(false);
                 }}
               >
                 {liked && <FaHeart className="heartFill" />}
                 {!liked && <FaRegHeart className="heartLine" />}
-                Like ({likesList?.length})
+                <p
+                  style={{ color: "#ed3326" }}
+                  onClick={() => {
+                    dispatch(setVisibleRightSideBar(true));
+                    if (showSideBar === false) {
+                      setShowSideBar(!showSideBar);
+                    }
+                    setShowLikedByList(true);
+                    setShowVisitedByList(false);
+                    setShowComment(false);
+                    setShowMap(false);
+                  }}
+                >
+                  Like ({likesList?.length})
+                </p>
               </div>
 
               {!showComment && (
@@ -559,7 +568,9 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
                   }}
                 >
                   <CgComment className="commentLine" />
-                  Comment ({vibespotInfo.comments?.length})
+                  <p style={{ color: "#570de6" }}>
+                    Comment ({vibespotInfo.comments?.length})
+                  </p>
                 </div>
               )}
 
@@ -585,19 +596,25 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
                     // only work when logged in
                     toggleVisitVibeSpot();
                   }
-                  dispatch(setVisibleRightSideBar(true));
-                  if (showSideBar === false) {
-                    setShowSideBar(!showSideBar);
-                  }
-                  setShowLikedByList(false);
-                  setShowVisitedByList(true);
-                  setShowComment(false);
-                  setShowMap(false);
                 }}
               >
                 {visited && <RiMapPin5Fill className="locationFill" />}
                 {!visited && <RiMapPin5Line className="locationLine" />}
-                Already Visited ({visitedByList?.length})
+                <p
+                  style={{ color: "green" }}
+                  onClick={() => {
+                    dispatch(setVisibleRightSideBar(true));
+                    if (showSideBar === false) {
+                      setShowSideBar(!showSideBar);
+                    }
+                    setShowLikedByList(false);
+                    setShowVisitedByList(true);
+                    setShowComment(false);
+                    setShowMap(false);
+                  }}
+                >
+                  Already Visited ({visitedByList?.length})
+                </p>
               </div>
             </div>
           </div>

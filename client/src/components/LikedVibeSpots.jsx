@@ -9,17 +9,16 @@ import VibeSpot from "./VibeSpot";
 const LikedVibeSpots = () => {
   //function to get the vibespot created by the user
   const user = useSelector((state) => state.auth.currentUser);
+  const userToken = useSelector((state) => state.auth.sessionToken);
   const dispatch = useDispatch();
   const [serverCode, setServerCode] = useState(0);
   const [userVibeSpotList, setUserVibeSpotList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showViewComponent, setShowViewComponent] = useState("");
   const [modalVibeSpotId, setModalVibeSpotId] = useState("");
-  const userToken = useSelector((state) => state.auth.sessionToken);
-
   const userId = user?._id;
   console.log(user);
-  console.log(userId);
+  // console.log(userId);
 
   const getLikedVibeSpot = async (userId) => {
     if (!userId) {
@@ -28,7 +27,7 @@ const LikedVibeSpots = () => {
     }
     try {
       const url = `${serverFetchLikedVibeSpots}/${userId}`;
-      console.log("Fetching URL:", url);
+      // console.log("Fetching URL:", url);
 
       const response = await fetch(url, {
         method: "GET",
@@ -39,7 +38,7 @@ const LikedVibeSpots = () => {
       });
 
       if (response.status === 200) {
-        console.log("Response Status:", response.status);
+        // console.log("Response Status:", response.status);
         const data = await response.json();
         console.log("Data:", data);
         setUserVibeSpotList(data);
@@ -58,7 +57,7 @@ const LikedVibeSpots = () => {
       getLikedVibeSpot(userId);
     }
     dispatch(setVisibleRightSideBar(false));
-  }, [userId]); // Only run when userId changes
+  }, [userId, showModal]); // Only run when userId changes
 
   return (
     <div className="vibeSpotListMainDiv">

@@ -188,66 +188,6 @@ export const toggleVisitedByVibeSpot = async (req, res) => {
   }
 };
 
-//set the vibespot has been visited by the user
-export const visitVibeSpot = async (req, res) => {
-  try {
-    const { vibespotId } = req.params; // Extract vibespotId from request params
-    const { userId } = req.body; // Extract userId from request body
-
-    console.log("userId Rec. :", userId);
-    console.log("vibespoId Rec. :", vibespotId);
-
-    // Ensure vibespotId is in the correct format
-    const vibespot = await VibeSpot.findById(vibespotId.trim());
-    if (!vibespot) {
-      return res.status(404).json({ error_message: "Vibespot not found" });
-    }
-
-    // Find the user by ID
-    const user = await User.findById(userId.trim());
-    if (!user) {
-      return res.status(404).json({ error_message: "User not found" });
-    }
-
-    // Initialize visitedBy array if it doesn't exist
-    if (!vibespot.visitedBy) {
-      vibespot.visitedBy = [];
-    }
-
-    // Initialize liked_vibespot array if it doesn't exist
-    if (!user.been_to_vibespot) {
-      user.been_to_vibespot = [];
-    }
-
-    // Check if the user has already liked the vibespot
-    const isVisited = vibespot.visitedBy.includes(userId);
-    if (isVisited) {
-      return res
-        .status(401)
-        .json({ error_message: "User has already been to this vibespot" });
-    }
-
-    // Add userId to vibespot's likes array
-    vibespot.visitedBy.push(userId);
-
-    // Add vibespotId to user's liked_vibespot array
-    user.been_to_vibespot.push(vibespotId);
-
-    // Save the updated vibespot and user
-    await vibespot.save();
-    await user.save();
-
-    // Respond with success message
-    res.status(200).json({
-      message: "Vibespot liked successfully",
-      vibespot: vibespot,
-      user: user,
-    });
-  } catch (err) {
-    res.status(500).json({ error_message: err.message });
-  }
-};
-
 //post comment on post.
 export const addComment = async (req, res) => {
   try {
