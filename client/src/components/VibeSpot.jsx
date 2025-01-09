@@ -252,6 +252,10 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     }
   };
 
+  /**
+   * We nned to get the new updated list of likes of user and
+   * so that we can get the feed likes updated
+   */
   //like post by sending userId and vibespotId
   const toggleLikeVibeSpot = async () => {
     try {
