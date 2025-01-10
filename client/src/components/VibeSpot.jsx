@@ -26,6 +26,7 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { avatar, notFound3 } from "../constants/images";
 import "@splidejs/react-splide/css";
 import InfoList from "./InfoList";
+import { setCurrentUser } from "../features/loginReducer";
 
 const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   let vibespotId;
@@ -274,7 +275,8 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         const data = await response.json();
         console.log("Liked By : ", data);
         setLiked(!liked);
-        setlikesList(data);
+        setlikesList(data.likes);
+        dispatch(setCurrentUser(data.userInfo));
       } else {
         console.log("Failed to like the Vibespot, status:", response.status);
       }
@@ -303,7 +305,8 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         const data = await response.json();
         console.log("Visited By : ", data);
         setVisited(!visited);
-        setVisitedByList(data);
+        setVisitedByList(data.visitedBy);
+        dispatch(setCurrentUser(data.userInfo));
       } else {
         console.log(
           "Failed to set visited the Vibespot, status:",

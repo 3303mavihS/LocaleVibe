@@ -118,6 +118,9 @@ export const toggleLikedByVibeSpot = async (req, res) => {
     // Save the updated user
     await user.save();
 
+    // Fetch the updated user
+    const updatedUser = await User.findById(userId);
+
     // Fetch the updated likes list from the VibeSpot
     // Populate 'likes' array to fetch user details after updates
     const updatedVibeSpot = await VibeSpot.findById(vibespotId).populate({
@@ -126,7 +129,9 @@ export const toggleLikedByVibeSpot = async (req, res) => {
     });
 
     // Return the updated list of likes with user details
-    return res.status(200).json(updatedVibeSpot.likes);
+    return res
+      .status(200)
+      .json({ likes: updatedVibeSpot.likes, userInfo: updatedUser });
   } catch (err) {
     res.status(404).json({ error_message: err.message });
   }
@@ -175,6 +180,9 @@ export const toggleVisitedByVibeSpot = async (req, res) => {
     // Save the updated user
     await user.save();
 
+    // Fetch the updated user
+    const updatedUser = await User.findById(userId);
+
     // Fetch the updated visited_by list from the VibeSpot
     const updatedVibeSpot = await VibeSpot.findById(vibespotId).populate({
       path: "visitedBy",
@@ -182,7 +190,9 @@ export const toggleVisitedByVibeSpot = async (req, res) => {
     });
 
     // Return the updated list of visited_by with user details
-    return res.status(200).json(updatedVibeSpot.visitedBy);
+    return res
+      .status(200)
+      .json({ visitedBy: updatedVibeSpot.visitedBy, userInfo: updatedUser });
   } catch (err) {
     res.status(404).json({ error_message: err.message });
   }

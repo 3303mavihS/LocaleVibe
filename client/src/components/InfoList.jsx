@@ -5,7 +5,7 @@ import ListElement from "./ListElement";
 
 const InfoList = ({ listData, placeholder, contentHeading, isLoggedIn }) => {
   const [query, setQuery] = useState("");
-  console.log(listData);
+  // console.log(listData);
   return (
     <div className="listMainDiv">
       <div className="searchBox">
