@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { serverFetchMyVibeSpots } from "../services/apicalls";
+import { serverFetchVisitedVibeSpots } from "../services/apicalls";
 import VibeSpotPostList from "./VibeSpotPostList";
 import "./styles/FeedModal.css";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
@@ -26,7 +26,7 @@ const VisitedVibeSpots = () => {
       return;
     }
     try {
-      const url = `${serverFetchMyVibeSpots}/${userId}`;
+      const url = `${serverFetchVisitedVibeSpots}/${userId}`;
       console.log("Fetching URL:", url);
 
       const response = await fetch(url, {
@@ -57,7 +57,7 @@ const VisitedVibeSpots = () => {
       getVisitedVibeSpot(userId);
     }
     dispatch(setVisibleRightSideBar(false));
-  }, [userId, showModal]); // Only run when userId changes
+  }, [userId, showModal, user]); // Only run when userId changes
 
   return (
     <div className="vibeSpotListMainDiv">

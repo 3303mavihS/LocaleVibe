@@ -57,7 +57,7 @@ const LikedVibeSpots = () => {
       getLikedVibeSpot(userId);
     }
     dispatch(setVisibleRightSideBar(false));
-  }, [userId, showModal]); // Only run when userId changes
+  }, [userId, showModal, user]); // Only run when userId changes
 
   return (
     <div className="vibeSpotListMainDiv">
