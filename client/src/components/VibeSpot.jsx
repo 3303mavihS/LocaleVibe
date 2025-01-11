@@ -11,7 +11,10 @@ import {
 } from "../services/apicalls";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet-routing-machine";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+// import "leaflet/dist/leaflet.css";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { FaRegMap } from "react-icons/fa6";
 import { GrSend } from "react-icons/gr";
@@ -23,10 +26,41 @@ import {
 } from "react-icons/md";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
-import { avatar, notFound3 } from "../constants/images";
 import "@splidejs/react-splide/css";
+import { avatar, notFound3 } from "../constants/images";
 import InfoList from "./InfoList";
 import { setCurrentUser } from "../features/loginReducer";
+
+/**
+ * Routing Machine Component by Leaflet-routing-machine
+ * @param {*} param0
+ * @returns
+ */
+
+const RoutingMachine = ({ currentLocation, vibespotLocation }) => {
+  const map = useMap();
+  console.log(currentLocation[0], currentLocation[1]);
+  console.log(vibespotLocation[0], vibespotLocation[1]);
+  // useEffect(() => {
+  //   if (!map) return;
+  //   //create the routing control and add it to the map
+  //   const routingControl = L.Routing.control({
+  //     waypoints: [
+  //       L.latLng(currentLocation[0], currentLocation[1]),
+  //       L.latLng(vibespotLocation[0], vibespotLocation[1]),
+  //     ],
+  //     routeWhileDragging: true,
+  //     lineOptions: {
+  //       styles: [{ color: "#6FA1EC", weight: 4 }],
+  //     },
+  //   }).addTo(map);
+
+  //   return () => {
+  //     map.removeControl(routingControl);
+  //   };
+  // }, [map, currentLocation, vibespotLocation]);
+  return null;
+};
 
 const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   let vibespotId;
@@ -34,6 +68,23 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   //http://localhost:3000/vibespot/66cb91327110738fb2ce151f
   const { paramsId } = useParams();
   // console.log(paramsId);
+
+  /**
+   * All the useSelector to access the global states
+   */
+  const isLoggedIn = useSelector((state) => state.auth.loginSession);
+  const userInfo = useSelector((state) => state.auth.currentUser);
+  const userToken = useSelector((state) => state.auth.sessionToken);
+  const isLocationPicked = useSelector(
+    (state) => state.locationInfo.isLocationPicked
+  );
+  const pickedLocation = useSelector(
+    (state) => state.locationInfo.pickedLocation
+  );
+  const rightSideVisible = useSelector(
+    (state) => state.header.visibleRightSideBar
+  );
+  // console.log(pickedLocation);
   /**
    * All the States
    */
@@ -53,9 +104,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   const [commentStart, setCommentStart] = useState();
   const [commentEnd, setCommentEnd] = useState();
   const [showMap, setShowMap] = useState(true);
-  const [locationPicked, setLocationPicked] = useState(false);
-  const [position, setPosition] = useState([28.612894, 77.229446]); // Initialize position directly
-  const [currentPos, setCurrentPos] = useState([28.612894, 77.229446]);
+  const [vibespotPosition, setVibespotPosition] = useState(null);
   const [date, setDate] = useState("");
 
   if (id === "" || id === undefined || id === null) {
@@ -68,33 +117,12 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   // console.log("vibespot :", vibespotId);
 
   const navigate = useNavigate();
-  //Map url Formation
-  //https://maps.google.com/maps?saddr=28.612894,77.229446&daddr=28.4622848,77.053952
-  const mapURL =
-    "https://maps.google.com/maps?saddr=" +
-    currentPos[0] +
-    "," +
-    currentPos[1] +
-    "&daddr=" +
-    position[0] +
-    "," +
-    position[1];
-  //https://www.google.com/maps/dir/28.612894,77.229446/28.4622848,77.053952
-
-  /**
-   * All the useSelector to access the global states
-   */
-  const rightSideVisible = useSelector(
-    (state) => state.header.visibleRightSideBar
-  );
-  const isLoggedIn = useSelector((state) => state.auth.loginSession);
-  const userInfo = useSelector((state) => state.auth.currentUser);
-  const userToken = useSelector((state) => state.auth.sessionToken);
 
   /**
    * All the useDispatch to dispatch the states globally
    */
   const dispatch = useDispatch();
+  dispatch(setVisibleRightSideBar(true));
 
   //get VibeSpot Info on load
   const getVibespot = async () => {
@@ -107,7 +135,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data);
+        console.log("Data Rec : ", data);
         /**
          * providing data to states locally and globally
          */
@@ -118,11 +146,18 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
         // Make sure location coordinates exist before setting position
         if (data.location && data.location.coordinates) {
-          setPosition([
-            data.location.coordinates[1], // Latitude
-            data.location.coordinates[0], // Longitude
+          setVibespotPosition([
+            data.location?.coordinates[1], // Latitude
+            data.location?.coordinates[0], // Longitude
           ]);
         }
+
+        console.log(
+          "VibeSpotPosition : ",
+          vibespotPosition[0],
+          data.location.coordinates[1], // Latitude
+          data.location.coordinates[0]
+        );
 
         //comment initialization
         if (data.comments?.length > 0) {
@@ -154,28 +189,6 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     }
   };
 
-  //get User Location
-  const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.permissions.query({ name: "geolocation" }).then((result) => {
-        if (result.state === "granted") {
-          //If granted then you can directly call your function here
-          navigator.geolocation.getCurrentPosition(success, error, options);
-          setLocationPicked(true);
-        } else if (result.state === "prompt") {
-          //If prompt then the user will be asked to give permission
-          navigator.geolocation.getCurrentPosition(success, error, options);
-        } else if (result.state === "denied") {
-          //If denied then you have to show instructions to enable location
-
-          setLocationPicked(false); //code to open messagebox modal
-        }
-      });
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
-  };
-
   // strip date only from the createdAt
   const dateOnly = date.split("T")[0];
   /**
@@ -185,29 +198,6 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   const fullStars = Math.floor(rating);
   const halfStar = rating % 1 !== 0;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-
-  //GeoLoaction Options
-  const options = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0,
-  };
-  //success function
-  const success = (pos) => {
-    var crd = pos.coords;
-    // console.log("Your current position is:");
-    // console.log(`Latitude : ${crd.latitude}`);
-    // console.log(`Longitude: ${crd.longitude}`);
-    // console.log(`More or less ${crd.accuracy} meters.`);
-    // setLat(crd.latitude);
-    // setLong(crd.longitude);
-    setCurrentPos([crd.latitude, crd.longitude]);
-    setLocationPicked(true);
-  };
-  //error function
-  const error = (err) => {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-  };
 
   //post comment by sending the commentInput
   //and userId to add it to vibespot comment
@@ -352,9 +342,8 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     /**
      * Call the function in useEffect show the updated data
      */
+
     getVibespot();
-    getUserLocation();
-    dispatch(setVisibleRightSideBar(true));
     if (showViewComponent === "like") {
       setShowMap(false);
       setShowSideBar(true);
@@ -392,6 +381,21 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     }
   }, [commentSuccess, commentError, vibespotFound]); // Run when vibespotId changes
 
+  //Map url Formation
+  //https://maps.google.com/maps?saddr=28.612894,77.229446&daddr=28.4622848,77.053952
+  const mapURL =
+    isLocationPicked && vibespotPosition !== null
+      ? "https://maps.google.com/maps?saddr=" +
+        pickedLocation[0] +
+        "," +
+        pickedLocation[1] +
+        "&daddr=" +
+        vibespotPosition[0] +
+        "," +
+        vibespotPosition[1]
+      : "#directions_on_new_page";
+  //https://www.google.com/maps/dir/28.612894,77.229446/28.4622848,77.053952
+  console.log(mapURL);
   return (
     // <div className="onTopDiv">
     //   <div className="backgroundOverlay">
@@ -403,6 +407,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
       )}
       {vibespotFound && (
         <div className="vibespotDivMain">
+          {/* paste here */}
           {/* Info Display Starts Here */}
           <div
             className={`mainContentBox ${
@@ -443,7 +448,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
               <p>
                 <span>
                   <a href={mapURL} target="blank">
-                    {locationPicked ? (
+                    {isLocationPicked ? (
                       <>Show Directions</>
                     ) : (
                       <>Location Permission Required!!</>
@@ -656,9 +661,9 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
           {/* Map Container Starts Here */}
           {showMap && rightSideVisible ? (
             <MapContainer
-              key={position} // This ensures re-rendering when position changes
+              key={vibespotPosition} // This ensures re-rendering when position changes
               id="map"
-              center={position}
+              center={vibespotPosition}
               zoom={15}
               scrollWheelZoom={false}
             >
@@ -666,15 +671,25 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Marker position={position}>
-                <Popup>Your Current Location</Popup>
-              </Marker>
+              {isLocationPicked && (
+                <RoutingMachine
+                  currentLocation={pickedLocation}
+                  vibespotLocation={vibespotPosition}
+                />
+              )}
+
+              {!isLocationPicked && (
+                <Marker position={vibespotPosition}>
+                  <Popup>{vibespotInfo.title}</Popup>
+                </Marker>
+              )}
             </MapContainer>
           ) : (
             <></>
           )}
           {/* Map Container Ends Here */}
 
+          {/* paste comment here */}
           {/* Comment Section Start Here */}
           {showComment && rightSideVisible ? (
             <div className="commentDiv">

@@ -3,7 +3,8 @@ import VibeSpotPost from "./VibeSpotPost";
 
 const VibeSpotPostList = ({
   userVibeSpotList,
-  locationPicked,
+  pickedLocation,
+  isLocationPicked,
   setModalVibeSpotId,
   setShowModal,
   setShowViewComponent,
@@ -17,7 +18,8 @@ const VibeSpotPostList = ({
             <VibeSpotPost
               key={vibeSpotDetail._id}
               vibeSpotDetail={vibeSpotDetail}
-              locationPicked={false}
+              pickedLocation={pickedLocation}
+              isLocationPicked={isLocationPicked}
               setModalVibeSpotId={setModalVibeSpotId}
               setShowModal={setShowModal}
               setShowViewComponent={setShowViewComponent}

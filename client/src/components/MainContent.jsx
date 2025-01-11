@@ -17,7 +17,7 @@ import VisitedVibeSpots from "./VisitedVibeSpots";
 
 const MainContent = () => {
   const isLoggedIn = useSelector((state) => state.auth.loginSession);
-  console.log("Logged In : ", isLoggedIn);
+  // console.log("Logged In : ", isLoggedIn);
   return (
     <div className="mainContentDiv">
       <div className="mainContentDivMain">

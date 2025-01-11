@@ -10,12 +10,16 @@ import { useSelector } from "react-redux";
 
 const VibeSpotPost = ({
   vibeSpotDetail,
-  locationPicked,
+  pickedLocation,
+  isLocationPicked,
   setModalVibeSpotId,
   setShowModal,
   setShowViewComponent,
 }) => {
-  const [currentPos, setCurrentPos] = useState([28.612894, 77.229446]); // Initialize position directly
+  const [currentPos, setCurrentPos] = useState([
+    pickedLocation[0],
+    pickedLocation[1],
+  ]); // Initialize position directly
   const [position, setPosition] = useState([
     vibeSpotDetail.location.coordinates[1],
     vibeSpotDetail.location.coordinates[0],
@@ -85,7 +89,7 @@ const VibeSpotPost = ({
           <p>
             <span>
               <a href={mapURL} target="blank">
-                {locationPicked ? (
+                {isLocationPicked ? (
                   <>Show Directions</>
                 ) : (
                   <>Location Permission Required!!</>

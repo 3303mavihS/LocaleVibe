@@ -1,17 +1,18 @@
 .headerDiv {
   background-color: rgb(255, 255, 255);
   width: 100%;
-  padding: 0 50px;
   position: fixed;
   z-index: 9999;
 }
 .headerDivMain {
   height: 90px;
   margin: 0 auto;
+  padding: 0 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
+
 .logoDiv {
   display: flex;
   width: 20%;
