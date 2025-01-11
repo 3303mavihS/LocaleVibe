@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { serverFetchMyVibeSpots } from "../services/apicalls";
 import VibeSpotPostList from "./VibeSpotPostList";
 import "./styles/FeedModal.css";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
 import VibeSpot from "./VibeSpot";
+import { serverFetchFeedVibeSpots } from "../services/apicalls";
 
-const MyVibeSpots = () => {
+const UserFeed = () => {
   //function to get the vibespot created by the user
   const user = useSelector((state) => state.auth.currentUser);
   const userToken = useSelector((state) => state.auth.sessionToken);
@@ -32,7 +32,7 @@ const MyVibeSpots = () => {
       return;
     }
     try {
-      const url = `${serverFetchMyVibeSpots}/${userId}`;
+      const url = `${serverFetchFeedVibeSpots}/${userId}`;
       // console.log("Fetching URL:", url);
 
       const response = await fetch(url, {
@@ -46,7 +46,7 @@ const MyVibeSpots = () => {
       if (response.status === 200) {
         // console.log("Response Status:", response.status);
         const data = await response.json();
-        // console.log("Data:", data);
+        console.log("Data:", data);
         setUserVibeSpotList(data);
         setServerCode(response.status);
       } else {
@@ -90,4 +90,4 @@ const MyVibeSpots = () => {
   );
 };
 
-export default MyVibeSpots;
+export default UserFeed;

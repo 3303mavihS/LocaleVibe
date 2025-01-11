@@ -10,6 +10,12 @@ const VisitedVibeSpots = () => {
   //function to get the vibespot created by the user
   const user = useSelector((state) => state.auth.currentUser);
   const userToken = useSelector((state) => state.auth.sessionToken);
+  const isLocationPicked = useSelector(
+    (state) => state.locationInfo.isLocationPicked
+  );
+  const pickedLocation = useSelector(
+    (state) => state.locationInfo.pickedLocation
+  );
   const dispatch = useDispatch();
   const [serverCode, setServerCode] = useState(0);
   const [userVibeSpotList, setUserVibeSpotList] = useState([]);
@@ -17,17 +23,17 @@ const VisitedVibeSpots = () => {
   const [showViewComponent, setShowViewComponent] = useState("");
   const [modalVibeSpotId, setModalVibeSpotId] = useState("");
   const userId = user?._id;
-  console.log(user);
+  // console.log(user);
   // console.log(userId);
 
-  const getVisitedVibeSpot = async (userId) => {
+  const getMyVibeSpot = async (userId) => {
     if (!userId) {
       console.log("UserId is undefined. Skipping API call.");
       return;
     }
     try {
       const url = `${serverFetchVisitedVibeSpots}/${userId}`;
-      console.log("Fetching URL:", url);
+      // console.log("Fetching URL:", url);
 
       const response = await fetch(url, {
         method: "GET",
@@ -40,11 +46,11 @@ const VisitedVibeSpots = () => {
       if (response.status === 200) {
         // console.log("Response Status:", response.status);
         const data = await response.json();
-        console.log("Data:", data);
+        // console.log("Data:", data);
         setUserVibeSpotList(data);
         setServerCode(response.status);
       } else {
-        console.log("Server returned status:", response.status);
+        // console.log("Server returned status:", response.status);
         setServerCode(response.status);
       }
     } catch (err) {
@@ -54,7 +60,7 @@ const VisitedVibeSpots = () => {
 
   useEffect(() => {
     if (userId) {
-      getVisitedVibeSpot(userId);
+      getMyVibeSpot(userId);
     }
     dispatch(setVisibleRightSideBar(false));
   }, [userId, showModal, user]); // Only run when userId changes
@@ -72,6 +78,8 @@ const VisitedVibeSpots = () => {
       )}
       {!showModal && (
         <VibeSpotPostList
+          isLocationPicked={isLocationPicked}
+          pickedLocation={pickedLocation}
           userVibeSpotList={userVibeSpotList}
           setModalVibeSpotId={setModalVibeSpotId}
           setShowModal={setShowModal}

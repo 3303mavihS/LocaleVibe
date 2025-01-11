@@ -55,6 +55,7 @@ export const serverLikeVibeSpot = mainDomain + "/dashboard/like-vibespot";
 export const serverVisitVibeSpot = mainDomain + "/dashboard/visit-vibespot";
 
 //server-side fetch all the vibespots of the user using userId
+export const serverFetchFeedVibeSpots = mainDomain + "/dashboard/user-feed";
 export const serverFetchMyVibeSpots = mainDomain + "/dashboard/user-vibespots";
 export const serverFetchLikedVibeSpots =
   mainDomain + "/dashboard/liked-vibespots";

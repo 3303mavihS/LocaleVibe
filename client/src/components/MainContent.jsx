@@ -14,6 +14,7 @@ import VibeSpot from "./VibeSpot";
 import MyVibeSpots from "./MyVibeSpots";
 import LikedVibeSpots from "./LikedVibeSpots";
 import VisitedVibeSpots from "./VisitedVibeSpots";
+import UserFeed from "./UserFeed";
 
 const MainContent = () => {
   const isLoggedIn = useSelector((state) => state.auth.loginSession);
@@ -22,8 +23,8 @@ const MainContent = () => {
     <div className="mainContentDiv">
       <div className="mainContentDivMain">
         <Routes>
-          <Route path="/" element={<VibeSpotPostList />} />
-          <Route path="/dashboard" element={<VibeSpotPostList />} />
+          <Route path="/" element={<UserFeed />} />
+          <Route path="/dashboard" element={<UserFeed />} />
           <Route
             path="/dashboard/add-vibespot"
             element={

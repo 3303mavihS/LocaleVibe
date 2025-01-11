@@ -233,7 +233,17 @@ export const addComment = async (req, res) => {
 //get user feed vibespots
 export const getFeedVibeSpot = async (req, res) => {
   try {
-    const feedVibeSpots = await VibeSpot.find();
+    // Aggregate to sort VibeSpots by the number of visitors in descending order
+    const feedVibeSpots = await VibeSpot.aggregate([
+      {
+        $addFields: {
+          visitorCount: { $size: { $ifNull: ["$visitedBy", []] } }, // Count the number of visitors
+        },
+      },
+      { $sort: { visitorCount: -1 } }, // Sort by visitor count in descending order
+      { $limit: 20 }, // Optional: Limit results for pagination or performance
+    ]);
+
     res.status(200).json(feedVibeSpots);
   } catch (err) {
     res.status(404).json({ error_message: err.message });

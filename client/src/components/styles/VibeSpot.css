@@ -55,10 +55,13 @@
   gap: 20px;
 }
 .vibespotDivMain #map {
-  min-height: 580px;
+  min-height: 780px;
   border-radius: 15px;
   width: 30%;
   z-index: 1;
+}
+.vibespotDivMain #map .leaflet-right{
+  display: none !important;
 }
 .vibespotDivMain .headingDiv {
   display: flex;

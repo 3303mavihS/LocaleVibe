@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { vibespotImageUrl } from "../services/apicalls";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { avatar, notFound3 } from "../constants/images";
@@ -16,14 +16,11 @@ const VibeSpotPost = ({
   setShowModal,
   setShowViewComponent,
 }) => {
-  const [currentPos, setCurrentPos] = useState([
-    pickedLocation[0],
-    pickedLocation[1],
-  ]); // Initialize position directly
-  const [position, setPosition] = useState([
+  const currentPos = [pickedLocation[0], pickedLocation[1]]; // Initialize position directly
+  const position = [
     vibeSpotDetail.location.coordinates[1],
     vibeSpotDetail.location.coordinates[0],
-  ]);
+  ];
 
   const isLoggedIn = useSelector((state) => state.auth.loginSession);
   const userInfo = useSelector((state) => state.auth.currentUser);

@@ -9,7 +9,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLocationPicked: false,
-  pickedLocation: null,
+  pickedLocation: [0, 0],
 };
 
 const locationInfoSlice = createSlice({

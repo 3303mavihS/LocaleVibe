@@ -14,7 +14,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import L from "leaflet";
 import "leaflet-routing-machine";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-// import "leaflet/dist/leaflet.css";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { FaRegMap } from "react-icons/fa6";
 import { GrSend } from "react-icons/gr";
@@ -36,29 +35,47 @@ import { setCurrentUser } from "../features/loginReducer";
  * @param {*} param0
  * @returns
  */
-
 const RoutingMachine = ({ currentLocation, vibespotLocation }) => {
   const map = useMap();
-  console.log(currentLocation[0], currentLocation[1]);
-  console.log(vibespotLocation[0], vibespotLocation[1]);
-  // useEffect(() => {
-  //   if (!map) return;
-  //   //create the routing control and add it to the map
-  //   const routingControl = L.Routing.control({
-  //     waypoints: [
-  //       L.latLng(currentLocation[0], currentLocation[1]),
-  //       L.latLng(vibespotLocation[0], vibespotLocation[1]),
-  //     ],
-  //     routeWhileDragging: true,
-  //     lineOptions: {
-  //       styles: [{ color: "#6FA1EC", weight: 4 }],
-  //     },
-  //   }).addTo(map);
+  // console.log(currentLocation[0], currentLocation[1]);
+  // console.log(vibespotLocation[0], vibespotLocation[1]);
+  useEffect(() => {
+    if (!map) return;
+    //create the routing control and add it to the map
 
-  //   return () => {
-  //     map.removeControl(routingControl);
-  //   };
-  // }, [map, currentLocation, vibespotLocation]);
+    const routingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(currentLocation[0], currentLocation[1]),
+        L.latLng(vibespotLocation[0], vibespotLocation[1]),
+      ],
+      lineOptions: {
+        styles: [{ color: "#570de6", weight: 4 }],
+      },
+      routeWhileDragging: true,
+      show: false, // Hide directions panel
+      addWaypoints: false,
+      draggableWaypoints: false,
+      fitSelectedRoutes: true,
+      showAlternatives: false,
+    })
+      // .on("routesfound", function (e) {
+      //   const route = e.routes[0]; // Get the first route
+      //   const { summary } = route; // Extract summary
+      //   const distance = (summary.totalDistance / 1000).toFixed(2); // Convert to km
+      //   const duration = (summary.totalTime / 60).toFixed(2); // Convert to minutes
+
+      //   // Pass the distance and duration to the parent or state
+      //   if (setRouteInfo) {
+      //     setRouteInfo({ distance, duration });
+      //   }
+      //   console.log(distance, duration);
+      // })
+      .addTo(map);
+
+    // return () => {
+    //   map.removeControl(routingControl);
+    // };
+  }, [map, currentLocation, vibespotLocation]);
   return null;
 };
 
@@ -104,7 +121,8 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
   const [commentStart, setCommentStart] = useState();
   const [commentEnd, setCommentEnd] = useState();
   const [showMap, setShowMap] = useState(true);
-  const [vibespotPosition, setVibespotPosition] = useState(null);
+  const [currentPosition, setCurrentPosition] = useState([0, 0]);
+  const [vibespotPosition, setVibespotPosition] = useState([0, 0]);
   const [date, setDate] = useState("");
 
   if (id === "" || id === undefined || id === null) {
@@ -135,7 +153,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
       if (response.status === 200) {
         const data = await response.json();
-        console.log("Data Rec : ", data);
+        // console.log("Data Rec : ", data);
         /**
          * providing data to states locally and globally
          */
@@ -152,12 +170,12 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
           ]);
         }
 
-        console.log(
-          "VibeSpotPosition : ",
-          vibespotPosition[0],
-          data.location.coordinates[1], // Latitude
-          data.location.coordinates[0]
-        );
+        // console.log(
+        //   "VibeSpotPosition : ",
+        //   vibespotPosition[0],
+        //   data.location?.coordinates[1], // Latitude
+        //   data.location?.coordinates[0]
+        // );
 
         //comment initialization
         if (data.comments?.length > 0) {
@@ -179,13 +197,13 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
           data.visitedBy.some((by) => by._id === userInfoFromSession._id)
         );
       } else {
-        console.log("Response Status : ", response.status);
+        // console.log("Response Status : ", response.status);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setVibespotFound(false);
       }
     } catch (err) {
-      console.log("error_message : ", err.message);
+      // console.log("error_message : ", err.message);
     }
   };
 
@@ -206,13 +224,13 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
       try {
         // Define the vibespotId and userId (You need to have these available)
         const vibespotId = vibespotInfo._id; // Replace with actual vibespot ID
-        //console.log(vibespotId);
+        //// console.log(vibespotId);
         const userId = userInfo._id; // Replace with actual user ID
-        //console.log(userId);
+        //// console.log(userId);
 
         // API endpoint to post the comment
         const url = `${serverPostComment}/${vibespotId}`;
-        //console.log(url);
+        //// console.log(url);
         // Send the comment to the server
         const response = await fetch(url, {
           method: "POST",
@@ -229,12 +247,12 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         if (response.ok) {
           const updatedVibespot = await response.json();
           setVibespotInfo(updatedVibespot);
-          //console.log(updatedVibespot);
+          //// console.log(updatedVibespot);
           setCommentInput("");
           setCommentSuccess(true);
         }
       } catch (err) {
-        console.log("error_message : ", err.message);
+        // console.log("error_message : ", err.message);
         setCommentError(true);
       }
       // update the comment in the Vibespot
@@ -263,15 +281,15 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Liked By : ", data);
+        // console.log("Liked By : ", data);
         setLiked(!liked);
         setlikesList(data.likes);
         dispatch(setCurrentUser(data.userInfo));
       } else {
-        console.log("Failed to like the Vibespot, status:", response.status);
+        // console.log("Failed to like the Vibespot, status:", response.status);
       }
     } catch (err) {
-      console.log("error_message : ", err.message);
+      // console.log("error_message : ", err.message);
     }
   };
 
@@ -293,7 +311,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Visited By : ", data);
+        // console.log("Visited By : ", data);
         setVisited(!visited);
         setVisitedByList(data.visitedBy);
         dispatch(setCurrentUser(data.userInfo));
@@ -304,7 +322,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         );
       }
     } catch (err) {
-      console.log("error_message : ", err.message);
+      // console.log("error_message : ", err.message);
     }
   };
 
@@ -316,9 +334,9 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
       setCommentStart(commentStart + 7);
     }
     setCommentEnd(commentEnd + 7);
-    console.log("Previous loading...");
-    console.log("Start : ", commentStart + 7);
-    console.log("End : ", commentEnd + 7);
+    // console.log("Previous loading...");
+    // console.log("Start : ", commentStart + 7);
+    // console.log("End : ", commentEnd + 7);
   };
 
   // Next Button Function
@@ -332,9 +350,9 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
 
     setCommentEnd(commentEnd - 7);
 
-    console.log("Next Loading...");
+    // console.log("Next Loading...");
 
-    console.log("End : ", commentEnd - 7);
+    // console.log("End : ", commentEnd - 7);
   };
 
   //useEffect to synchronize the ui according to data loading
@@ -342,7 +360,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     /**
      * Call the function in useEffect show the updated data
      */
-
+    setCurrentPosition([pickedLocation[0], pickedLocation[1]]);
     getVibespot();
     if (showViewComponent === "like") {
       setShowMap(false);
@@ -379,23 +397,24 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     if (commentError) {
       setTimeout(() => setCommentError(false), 5000);
     }
-  }, [commentSuccess, commentError, vibespotFound]); // Run when vibespotId changes
+  }, [commentSuccess, commentError, vibespotFound, pickedLocation]); // Run when vibespotId changes
 
   //Map url Formation
   //https://maps.google.com/maps?saddr=28.612894,77.229446&daddr=28.4622848,77.053952
   const mapURL =
-    isLocationPicked && vibespotPosition !== null
+    isLocationPicked && currentPosition && vibespotPosition !== null
       ? "https://maps.google.com/maps?saddr=" +
-        pickedLocation[0] +
+        currentPosition[0] +
         "," +
-        pickedLocation[1] +
+        currentPosition[1] +
         "&daddr=" +
         vibespotPosition[0] +
         "," +
         vibespotPosition[1]
       : "#directions_on_new_page";
   //https://www.google.com/maps/dir/28.612894,77.229446/28.4622848,77.053952
-  console.log(mapURL);
+  // console.log(mapURL);
+
   return (
     // <div className="onTopDiv">
     //   <div className="backgroundOverlay">
@@ -673,7 +692,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
               />
               {isLocationPicked && (
                 <RoutingMachine
-                  currentLocation={pickedLocation}
+                  currentLocation={currentPosition}
                   vibespotLocation={vibespotPosition}
                 />
               )}
@@ -745,64 +764,66 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
                   <span>Be First One </span>to post Comment.
                 </div>
               )}
-              <div className="commentDisplayBox">
-                <div className="commentList">
-                  {[...vibespotInfo?.comments]
-                    .slice(commentStart, commentEnd)
-                    .reverse()
-                    .map((c, index) => (
-                      <div key={index} className="commentBox">
-                        <div className="comment">
-                          <img
-                            src={
-                              c.userId?.userPicturePath !== ""
-                                ? userImageUrl + c.userId?.userPicturePath
-                                : avatar
-                            }
-                            alt={`${c.userId.firstName} ${c.userId.lastName}`}
-                            onError={(e) => {
-                              e.target.onerror = null; // Prevents looping
-                              e.target.src = avatar; // Fallback URL for the image
-                            }}
-                          />
-                          <div className="userMeta">
-                            <h4>{`${c.userId.firstName} ${c.userId.lastName}`}</h4>
-                            <p>@{c.userId.username}</p>
+              {vibespotInfo.comments?.length > 0 && (
+                <div className="commentDisplayBox">
+                  <div className="commentList">
+                    {[...vibespotInfo?.comments]
+                      .slice(commentStart, commentEnd)
+                      .reverse()
+                      .map((c, index) => (
+                        <div key={index} className="commentBox">
+                          <div className="comment">
+                            <img
+                              src={
+                                c.userId?.userPicturePath !== ""
+                                  ? userImageUrl + c.userId?.userPicturePath
+                                  : avatar
+                              }
+                              alt={`${c.userId.firstName} ${c.userId.lastName}`}
+                              onError={(e) => {
+                                e.target.onerror = null; // Prevents looping
+                                e.target.src = avatar; // Fallback URL for the image
+                              }}
+                            />
+                            <div className="userMeta">
+                              <h4>{`${c.userId.firstName} ${c.userId.lastName}`}</h4>
+                              <p>@{c.userId.username}</p>
+                            </div>
+                          </div>
+                          <div className="userComment">
+                            <p>{c.text}</p>
                           </div>
                         </div>
-                        <div className="userComment">
-                          <p>{c.text}</p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-                {/* pagination of comments */}
-                {vibespotInfo.comments?.length > 6 && (
-                  <div className="arrows">
-                    {/* <hr /> */}
-                    <div className="commentPagination">
-                      {commentEnd < vibespotInfo.comments.length && (
-                        <div
-                          onClick={() => {
-                            loadPrevious();
-                          }}
-                        >
-                          <MdOutlineArrowBackIos className="paginationIcon" />
-                        </div>
-                      )}
-                      {commentStart !== 0 && (
-                        <div
-                          onClick={() => {
-                            loadNext();
-                          }}
-                        >
-                          <MdOutlineArrowForwardIos className="paginationIcon" />
-                        </div>
-                      )}
-                    </div>
+                      ))}
                   </div>
-                )}
-              </div>
+                  {/* pagination of comments */}
+                  {vibespotInfo.comments?.length > 6 && (
+                    <div className="arrows">
+                      {/* <hr /> */}
+                      <div className="commentPagination">
+                        {commentEnd < vibespotInfo.comments.length && (
+                          <div
+                            onClick={() => {
+                              loadPrevious();
+                            }}
+                          >
+                            <MdOutlineArrowBackIos className="paginationIcon" />
+                          </div>
+                        )}
+                        {commentStart !== 0 && (
+                          <div
+                            onClick={() => {
+                              loadNext();
+                            }}
+                          >
+                            <MdOutlineArrowForwardIos className="paginationIcon" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ) : (
             <></>
