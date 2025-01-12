@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { vibespotImageUrl } from "../services/apicalls";
+import { vibespotImageUrl, userImageUrl } from "../services/apicalls";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { avatar, notFound3 } from "../constants/images";
 import { CgComment } from "react-icons/cg";
@@ -128,6 +128,27 @@ const VibeSpotPost = ({
           >
             Posted On : {dateOnly}
           </p>
+        </div>
+
+        <div className="metaDiv">
+          <div className="userMeta">
+            <img
+              src={
+                vibeSpotDetail.userId?.userPicturePath !== ""
+                  ? userImageUrl + vibeSpotDetail.userId?.userPicturePath
+                  : avatar
+              }
+              alt={vibeSpotDetail.userId?.firstName}
+              onError={(e) => {
+                e.target.onerror = null; // Prevents looping
+                e.target.src = avatar; // Fallback URL for the image
+              }}
+            />
+            <p>
+              {vibeSpotDetail.userId?.firstName}{" "}
+              {vibeSpotDetail.userId?.lastName}
+            </p>
+          </div>
         </div>
 
         <hr />

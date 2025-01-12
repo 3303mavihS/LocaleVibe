@@ -46,7 +46,7 @@ const VisitedVibeSpots = () => {
       if (response.status === 200) {
         // console.log("Response Status:", response.status);
         const data = await response.json();
-        // console.log("Data:", data);
+        console.log("Visited Feed Data:", data);
         setUserVibeSpotList(data);
         setServerCode(response.status);
       } else {

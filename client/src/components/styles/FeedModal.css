@@ -55,3 +55,20 @@
     color: #333333;
     text-align: justify;
 }
+.miniVibeSpotInnerDiv .metaDiv p {
+    font-size: 14px;
+    color: #333;
+    font-weight: 700;
+  }
+.miniVibeSpotInnerDiv .metaDiv img {
+width: 45px;
+height: 45px;
+border-radius: 50%;
+}
+.miniVibeSpotInnerDiv .metaDiv .userMeta {
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: start;
+gap: 8px;
+}

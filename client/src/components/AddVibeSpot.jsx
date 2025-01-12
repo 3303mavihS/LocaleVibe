@@ -13,62 +13,21 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
 
 const AddVibeSpot = () => {
+  const isLocationPicked = useSelector(
+    (state) => state.locationInfo.isLocationPicked
+  );
+  const pickedLocation = useSelector(
+    (state) => state.locationInfo.pickedLocation
+  );
   const [serverCode, setServerCode] = useState(0);
   const [category, setCategory] = useState("");
-  const [lat, setLat] = useState(28.612894);
-  const [long, setLong] = useState(77.229446);
-  const [position, setPosition] = useState([28.612894, 77.229446]); // Initialize position directly
-  const [locationPicked, setLocationPicked] = useState(false);
+  const [lat, setLat] = useState(pickedLocation[0]);
+  const [long, setLong] = useState(pickedLocation[1]);
   const userInfo = useSelector((state) => state.auth.currentUser);
   const userToken = useSelector((state) => state.auth.sessionToken);
+  const [currentPosition, setCurrentPosition] = useState([0, 0]);
+
   const dispatch = useDispatch();
-  dispatch(setVisibleRightSideBar(true));
-  //GeoLoaction Options
-  const options = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0,
-  };
-
-  //success function
-  const success = (pos) => {
-    var crd = pos.coords;
-    // console.log("Your current position is:");
-    // console.log(`Latitude : ${crd.latitude}`);
-    // console.log(`Longitude: ${crd.longitude}`);
-    // console.log(`More or less ${crd.accuracy} meters.`);
-    setLat(crd.latitude);
-    setLong(crd.longitude);
-    setPosition([crd.latitude, crd.longitude]);
-    setLocationPicked(true);
-  };
-
-  //error function
-  const error = (err) => {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-  };
-
-  //get User Location
-  const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.permissions.query({ name: "geolocation" }).then((result) => {
-        if (result.state === "granted") {
-          //If granted then you can directly call your function here
-          navigator.geolocation.getCurrentPosition(success, error, options);
-
-          setLocationPicked(true);
-        } else if (result.state === "prompt") {
-          //If prompt then the user will be asked to give permission
-          navigator.geolocation.getCurrentPosition(success, error, options);
-        } else if (result.state === "denied") {
-          //If denied then you have to show instructions to enable location
-          setLocationPicked(false); //code to open messagebox modal
-        }
-      });
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
-  };
 
   // function and variable from useForm
   const {
@@ -80,7 +39,7 @@ const AddVibeSpot = () => {
   //form submission handler
   const submiteVibeSpotInfo = async (formData) => {
     //check for location picked specifically
-    if (locationPicked) {
+    if (isLocationPicked) {
       if (imageUploaded) {
         //submitted user data
         const data = { ...formData, lat, long, vibeSpotImagePath, category };
@@ -193,6 +152,17 @@ const AddVibeSpot = () => {
       console.log("error_message : ", err.message);
     }
   };
+
+  //useEffect to synchronize the ui according to data loading
+  useEffect(() => {
+    /**
+     * Call the function in useEffect show the updated data
+     */
+    setCurrentPosition([pickedLocation[0], pickedLocation[1]]);
+    setLat(pickedLocation[0]);
+    setLong(pickedLocation[1]);
+    dispatch(setVisibleRightSideBar(true));
+  }, []);
 
   return (
     <div className="formBox">
@@ -377,13 +347,10 @@ const AddVibeSpot = () => {
               </div>
               {/* Visualizing Location On Map */}
               <div className="locationBtns">
-                <div
-                  className="refresh"
-                  onClick={() => {
-                    getUserLocation();
-                  }}
-                >
-                  Pick My Location
+                <div className="refresh">
+                  {!isLocationPicked
+                    ? "Location Not Picked"
+                    : "Location Captured"}
                 </div>
                 {/* TODO implement full screen feature here instead of location  */}
                 {/* <TbCurrentLocation
@@ -395,9 +362,9 @@ const AddVibeSpot = () => {
               </div>
               {/* Map Container starts here */}
               <MapContainer
-                key={position} // This ensures re-rendering when position changes
+                key={currentPosition} // This ensures re-rendering when position changes
                 id="map"
-                center={position}
+                center={currentPosition}
                 zoom={15}
                 scrollWheelZoom={false}
               >
@@ -405,7 +372,7 @@ const AddVibeSpot = () => {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={position}>
+                <Marker position={currentPosition}>
                   <Popup>Your Current Location</Popup>
                 </Marker>
               </MapContainer>
@@ -514,6 +481,17 @@ const AddVibeSpot = () => {
                 multiple
                 accept="image/png, image/jpeg"
               />
+              <button
+                style={{ margin: "0 auto" }}
+                onClick={() => {
+                  setServerCode(0);
+                  setOpenModal(false);
+                  setChosenImages([]);
+                  setImageSelected(false);
+                }}
+              >
+                Close
+              </button>
             </div>
           )}
         </div>

@@ -23,8 +23,18 @@ const MainContent = () => {
     <div className="mainContentDiv">
       <div className="mainContentDivMain">
         <Routes>
-          <Route path="/" element={<UserFeed />} />
-          <Route path="/dashboard" element={<UserFeed />} />
+          <Route
+            path="/"
+            element={
+              isLoggedIn ? <UserFeed /> : <Navigate to="/auth/sign-in" />
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              isLoggedIn ? <UserFeed /> : <Navigate to="/auth/sign-in" />
+            }
+          />
           <Route
             path="/dashboard/add-vibespot"
             element={
@@ -33,20 +43,31 @@ const MainContent = () => {
           />
           <Route
             path="/dashboard/:personUsername"
-            element={<PersonProfile />}
+            element={
+              isLoggedIn ? <PersonProfile /> : <Navigate to="/auth/sign-in" />
+            }
           />
           <Route
-            path="/dashboard/vibespot/:vibespotId"
-            element={<VibeSpotPost />}
+            path="/dashboard/my-vibespots"
+            element={
+              isLoggedIn ? <MyVibeSpots /> : <Navigate to="/auth/sign-in" />
+            }
           />
-          <Route path="/dashboard/my-vibespots" element={<MyVibeSpots />} />
           <Route
             path="/dashboard/liked-vibespots"
-            element={<LikedVibeSpots />}
+            element={
+              isLoggedIn ? <LikedVibeSpots /> : <Navigate to="/auth/sign-in" />
+            }
           />
           <Route
             path="/dashboard/visited-vibespots"
-            element={<VisitedVibeSpots />}
+            element={
+              isLoggedIn ? (
+                <VisitedVibeSpots />
+              ) : (
+                <Navigate to="/auth/sign-in" />
+              )
+            }
           />
           <Route
             path="/dashboard/profile-setting"
@@ -59,13 +80,13 @@ const MainContent = () => {
             path="/auth/sign-in"
             element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignIn />}
           />
-          <Route path="/auth/change-password" element={<ForgotPassword />} />
-          <Route path="/vibespot/:paramsId" element={<VibeSpot />} />
-          {/* <Route path="/vibespot/:vibespotId/likes" element={<VibeSpot />} />
           <Route
-            path="/vibespot/:vibespotId/visited-by"
-            element={<VibeSpot />}
-          /> */}
+            path="/auth/change-password"
+            element={
+              isLoggedIn ? <ForgotPassword /> : <Navigate to="/auth/sign-in" />
+            }
+          />
+          <Route path="/vibespot/:paramsId" element={<VibeSpot />} />
         </Routes>
       </div>
     </div>

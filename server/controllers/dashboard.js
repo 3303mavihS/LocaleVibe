@@ -233,20 +233,54 @@ export const addComment = async (req, res) => {
 //get user feed vibespots
 export const getFeedVibeSpot = async (req, res) => {
   try {
-    // Aggregate to sort VibeSpots by the number of visitors in descending order
     const feedVibeSpots = await VibeSpot.aggregate([
+      // Add visitorCount field to count the number of visitors
       {
         $addFields: {
-          visitorCount: { $size: { $ifNull: ["$visitedBy", []] } }, // Count the number of visitors
+          visitorCount: { $size: { $ifNull: ["$visitedBy", []] } }, // Count the visitors
         },
       },
-      { $sort: { visitorCount: -1 } }, // Sort by visitor count in descending order
-      { $limit: 20 }, // Optional: Limit results for pagination or performance
+      // Sort by visitorCount in descending order
+      { $sort: { visitorCount: -1 } },
+      // Limit the results to top 20
+      { $limit: 20 },
+      // Populate userId details by performing a $lookup
+      {
+        $lookup: {
+          from: "users", // The users collection
+          localField: "userId", // Field in VibeSpot referencing the user
+          foreignField: "_id", // Field in users collection
+          as: "userId", // Alias for the joined data
+        },
+      },
+      // Project fields to include only necessary information
+      {
+        $project: {
+          title: 1,
+          description: 1,
+          category: 1,
+          location: 1,
+          likes: 1,
+          visitedBy: 1,
+          best_menu: 1,
+          recommendation: 1,
+          vibeSpotImagePath: 1,
+          rating: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          visitorCount: 1, // Include the visitor count
+          userId: { $arrayElemAt: ["$userId", 0] }, // Extract single user object
+        },
+      },
     ]);
+
+    if (!feedVibeSpots || feedVibeSpots.length === 0) {
+      return res.status(404).json({ error_message: "No VibeSpots found" });
+    }
 
     res.status(200).json(feedVibeSpots);
   } catch (err) {
-    res.status(404).json({ error_message: err.message });
+    res.status(500).json({ error_message: err.message });
   }
 };
 
@@ -258,6 +292,9 @@ export const getUserVibeSpots = async (req, res) => {
     console.log(userId);
     const userVibeSpots = await VibeSpot.find({
       userId: userObjectId,
+    }).populate({
+      path: "userId", // Populate userId field for VibeSpot creator
+      select: "username firstName lastName userPicturePath",
     });
     return res.status(200).json(userVibeSpots);
   } catch (err) {
@@ -275,6 +312,9 @@ export const getLikedVibeSpots = async (req, res) => {
     // Query VibeSpot collection where the userId exists in the 'likes' array
     const userVibeSpots = await VibeSpot.find({
       likes: userObjectId, // No need to convert userId to ObjectId unless necessary
+    }).populate({
+      path: "userId", // Populate userId field for VibeSpot creator
+      select: "username firstName lastName userPicturePath",
     });
 
     return res.status(200).json(userVibeSpots);
@@ -293,6 +333,9 @@ export const getVisitedVibeSpots = async (req, res) => {
     // Query VibeSpot collection where the userId exists in the 'visitedBy' array
     const userVibeSpots = await VibeSpot.find({
       visitedBy: userObjectId, // No need to convert userId to ObjectId unless necessary
+    }).populate({
+      path: "userId", // Populate userId field for VibeSpot creator
+      select: "username firstName lastName userPicturePath",
     });
 
     return res.status(200).json(userVibeSpots);

@@ -56,7 +56,7 @@ const RoutingMachine = ({ currentLocation, vibespotLocation }) => {
       addWaypoints: false,
       draggableWaypoints: false,
       fitSelectedRoutes: true,
-      showAlternatives: false,
+      showAlternatives: true,
     })
       // .on("routesfound", function (e) {
       //   const route = e.routes[0]; // Get the first route
@@ -133,8 +133,6 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     showBackButton = true;
   }
   // console.log("vibespot :", vibespotId);
-
-  const navigate = useNavigate();
 
   /**
    * All the useDispatch to dispatch the states globally

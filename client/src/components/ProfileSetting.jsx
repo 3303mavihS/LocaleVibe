@@ -158,7 +158,7 @@ const ProfileSetting = () => {
           </div>
           <form onSubmit={handleSubmit(submitUserInfo)}>
             <div className="twoBoxDiv">
-              <div>
+              <div style={{ width: "50%" }}>
                 {errors.firstName && (
                   <p className="error">First Name required.</p>
                 )}
@@ -174,7 +174,7 @@ const ProfileSetting = () => {
                   })}
                 />
               </div>
-              <div>
+              <div style={{ width: "50%" }}>
                 {errors.lastName && (
                   <p className="error">Last Name required.</p>
                 )}
@@ -336,6 +336,17 @@ const ProfileSetting = () => {
                 hidden
                 accept="image/png, image/jpeg"
               />
+              <button
+                style={{ margin: "0 auto" }}
+                onClick={() => {
+                  setServerCode(0);
+                  setOpenModal(false);
+                  setChosenImage([]);
+                  setImageSelected(false);
+                }}
+              >
+                Close
+              </button>
             </div>
           )}
         </div>
