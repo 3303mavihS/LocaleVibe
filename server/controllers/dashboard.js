@@ -262,6 +262,7 @@ export const getFeedVibeSpot = async (req, res) => {
           location: 1,
           likes: 1,
           visitedBy: 1,
+          comments: 1,
           best_menu: 1,
           recommendation: 1,
           vibeSpotImagePath: 1,
