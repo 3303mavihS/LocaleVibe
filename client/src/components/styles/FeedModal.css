@@ -61,14 +61,14 @@
     font-weight: 700;
   }
 .miniVibeSpotInnerDiv .metaDiv img {
-width: 45px;
-height: 45px;
-border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 .miniVibeSpotInnerDiv .metaDiv .userMeta {
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: start;
-gap: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 8px;
 }

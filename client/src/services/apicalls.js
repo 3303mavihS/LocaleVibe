@@ -4,7 +4,8 @@
  */
 //website url
 //const mainDomain = "https://localevibe.onrender.com";
-const mainDomain = "http://localhost:3001";
+// const mainDomain = "http://localhost:3001";
+const mainDomain = "https://localevibe.onrender.com";
 //googlemap query url
 export const googleMapSearchUrl =
   "https://www.google.com/maps/search/?api=1&query=";
