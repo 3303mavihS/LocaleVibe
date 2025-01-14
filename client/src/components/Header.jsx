@@ -100,10 +100,11 @@ const Header = () => {
               </span>
             </p>
           )}
-          <MdDashboard
+          {/* Hiding the right side bar toggle button feature */}
+          {/* <MdDashboard
             className="rightsidebartoggleicon"
             onClick={toggleSideBar}
-          />
+          /> */}
         </div>
       </div>
     </div>

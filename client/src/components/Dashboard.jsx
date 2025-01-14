@@ -11,13 +11,13 @@ import {
 } from "../features/locationReducer";
 
 const Dashboard = () => {
+  const isLoggedIn = useSelector((state) => state.auth.loginSession);
   const showSideBar = useSelector((state) => state.header.visibleRightSideBar);
   const [lat, setLat] = useState(28.612894);
   const [long, setLong] = useState(77.229446);
   const [position, setPosition] = useState([28.612894, 77.229446]); // Initialize position directly
   const [locationPicked, setLocationPicked] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-
   const dispatch = useDispatch();
 
   //Location permission should be taken on the dashboard login
@@ -84,10 +84,11 @@ const Dashboard = () => {
     <div className="dashboardDiv">
       <div className="dashboardDivMain">
         <div className="leftDiv">
-          <LeftSideBar className="left" />
+          {isLoggedIn && <LeftSideBar className="left" />}
         </div>
-        <div className={`centerDiv ${showSideBar ? "strechCenterDiv" : ""}`}>
-          {showNotification && (
+        {/* <div className={`centerDiv ${showSideBar ? "strechCenterDiv" : ""}`}> */}
+        <div className={`centerDiv ${!isLoggedIn ? "strechCenterDiv" : ""}`}>
+          {showNotification && isLoggedIn && (
             <div className="notificationMainDiv">
               <div className="notificationContentDiv">
                 {!locationPicked && (
@@ -100,9 +101,9 @@ const Dashboard = () => {
           )}
           <MainContent className="center" />
         </div>
-        <div className={`rightDiv ${showSideBar ? "hidesideBar" : ""}`}>
+        {/* <div className={`rightDiv ${showSideBar ? "hidesideBar" : ""}`}>
           <RightSideBar className="right" />
-        </div>
+        </div> */}
       </div>
     </div>
   );

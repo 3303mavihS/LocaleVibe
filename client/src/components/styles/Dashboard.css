@@ -20,14 +20,14 @@
   padding-right: 20px;
 }
 .centerDiv {
-  width: 60%;
+  width: 80%;
   position: relative;
   display: flex;
-    gap: 20px;
-    flex-direction: column;
+  gap: 20px;
+  flex-direction: column;
 }
 .strechCenterDiv {
-  width: 80%;
+  width: 100%;
 }
 .rightDiv {
   width: 20%;

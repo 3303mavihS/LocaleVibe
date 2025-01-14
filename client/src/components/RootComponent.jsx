@@ -9,10 +9,11 @@ import {
   setLoginSession,
   setSessionToken,
 } from "../features/loginReducer";
+import { setVisibleRightSideBar } from "../features/headerElementReducer";
 
 const RootComponent = () => {
   const dispatch = useDispatch();
-
+  dispatch(setVisibleRightSideBar(true));
   useEffect(() => {
     const loggedIn = localStorage.getItem("LoggedIn") === "true";
 
