@@ -21,7 +21,8 @@ const MobileApp = () => {
         }}
       >
         We'll be soon launching <br />
-        LocalVibe on Mobile.
+        LocalVibe on Mobile. <br />
+        Try it on Desktop.
       </p>
     </div>
   );

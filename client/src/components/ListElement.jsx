@@ -1,6 +1,6 @@
 import React from "react";
 import "../components/styles/ListElement.css";
-import { userImageUrl } from "../services/apicalls.js";
+import { phpServerLink, userImageUrl } from "../services/apicalls.js";
 import { avatar } from "../constants/images.js";
 const ListElement = ({ data }) => {
   return (
@@ -8,7 +8,7 @@ const ListElement = ({ data }) => {
       <img
         src={
           data?.userPicturePath !== ""
-            ? userImageUrl + data?.userPicturePath
+            ? phpServerLink + data?.userPicturePath
             : avatar
         }
         alt={`${data?.firstName} ${data?.lastName}`}

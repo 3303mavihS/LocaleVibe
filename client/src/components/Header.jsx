@@ -13,7 +13,7 @@ import {
   setLoginSession,
   setSessionToken,
 } from "../features/loginReducer";
-import { userImageUrl } from "../services/apicalls";
+import { phpServerLink, userImageUrl } from "../services/apicalls";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -42,7 +42,7 @@ const Header = () => {
         <div className="searchDiv">
           <SearchBar
             query={query}
-            placeholder={"Seach Here"}
+            placeholder={"Seach Here (Coming Soon...)"}
             inputbackgroundColor={"#faf9fb"}
           />
         </div>
@@ -53,10 +53,14 @@ const Header = () => {
               <img
                 src={
                   userInfo && userInfo.userPicturePath
-                    ? userImageUrl + userInfo.userPicturePath
+                    ? phpServerLink + userInfo.userPicturePath
                     : avatar
                 }
                 alt="profile-pic"
+                onError={(e) => {
+                  e.target.onerror = null; // Prevents looping
+                  e.target.src = avatar; // Fallback URL for the image
+                }}
               />
             </div>
           )}
@@ -87,6 +91,7 @@ const Header = () => {
               </div>
             </div>
           )}
+
           {!isLoggedIn && (
             <p>
               <span

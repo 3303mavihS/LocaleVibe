@@ -18,11 +18,9 @@ const locationInfoSlice = createSlice({
   reducers: {
     setIsLocationPicked: (state, { payload }) => {
       state.isLocationPicked = payload;
-      // console.log("isLocationPicked : ", state.isLocationPicked);
     },
     setPickedLocation: (state, { payload }) => {
       state.pickedLocation = payload;
-      // console.log("pickedLocation : ", state.pickedLocation);
     },
   },
 });

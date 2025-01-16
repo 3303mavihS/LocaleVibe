@@ -5,7 +5,7 @@ import { avatar } from "../constants/images";
 import Navigation from "./Navigation";
 import { LuSettings } from "react-icons/lu";
 import { useSelector } from "react-redux";
-import { userImageUrl } from "../services/apicalls";
+import { phpServerLink, userImageUrl } from "../services/apicalls";
 
 const LeftSideBar = () => {
   const userInfo = useSelector((state) => state.auth.currentUser);
@@ -19,7 +19,7 @@ const LeftSideBar = () => {
               <img
                 src={
                   userInfo && userInfo.userPicturePath
-                    ? userImageUrl + userInfo.userPicturePath
+                    ? phpServerLink + userInfo.userPicturePath
                     : avatar
                 }
                 alt="profile"

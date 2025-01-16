@@ -15,7 +15,7 @@ const SearchBar = ({ query, placeholder, inputbackgroundColor }) => {
         placeholder={placeholder}
         onChange={(e) => {
           setQueryInput(e.target.value);
-          console.log(e.target.value);
+          // console.log(e.target.value);
         }}
         style={{ background: inputbackgroundColor }}
       />

@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useState, useRef } from "react";
-import { serverVibeSpotImageUploadUrl } from "../services/apicalls";
+import {
+  phpVibesotUploadServerLink,
+  serverVibeSpotImageUploadUrl,
+} from "../services/apicalls";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { serverAddVibeSpotUrl } from "../services/apicalls";
@@ -11,6 +14,7 @@ import { RiFullscreenFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
+import { compose } from "redux";
 
 const AddVibeSpot = () => {
   const isLocationPicked = useSelector(
@@ -43,7 +47,7 @@ const AddVibeSpot = () => {
       if (imageUploaded) {
         //submitted user data
         const data = { ...formData, lat, long, vibeSpotImagePath, category };
-        console.log(data);
+        // console.log(data);
         // passing data in request body
         try {
           const response = await fetch(serverAddVibeSpotUrl, {
@@ -55,7 +59,7 @@ const AddVibeSpot = () => {
             body: JSON.stringify(data),
           });
           // Log the server response code
-          console.log("Server Response Code:", response.status);
+          // console.log("Server Response Code:", response.status);
           setServerCode(response.status);
           // Check for successful response
           if (!response.ok) {
@@ -63,17 +67,17 @@ const AddVibeSpot = () => {
           }
 
           const received_response = await response.json();
-          console.log(received_response);
+          // console.log(received_response);
         } catch (err) {
-          console.log("error_message : ", err.message);
+          // console.log("error_message : ", err.message);
         }
       } else {
         setServerCode(1002);
-        console.log("server code 1002");
+        // console.log("server code 1002");
       }
     } else {
       setServerCode(1001);
-      console.log("server code 1001");
+      // console.log("server code 1001");
     }
   };
 
@@ -101,6 +105,7 @@ const AddVibeSpot = () => {
   const [vibeSpotImagePath, setVibeSpotImagePath] = useState([]);
   const [imageSelected, setImageSelected] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
+
   const uploadImageForDisplay = () => {
     const files = fileUploadRef.current.files; // This is a FileList
     const fileArray = Array.from(files); // Convert FileList to Array
@@ -122,38 +127,42 @@ const AddVibeSpot = () => {
     // Set image URLs in state
     setChosenImages(imageUrls);
     setImageSelected(true);
-    console.log(imageUrls);
+    // console.log(imageUrls);
   };
 
   const uploadSelectedImage = async () => {
     try {
-      const files = fileUploadRef.current.files; // This is a FileList
+      const files = fileUploadRef.current.files;
 
       const formData = new FormData();
-      // Append each file to the FormData object
+
       for (let i = 0; i < files.length; i++) {
-        formData.append("vibespot-image", files[i]); // Field name must match your multer config
+        formData.append("vibespot-image[]", files[i]);
       }
-      const response = await fetch(serverVibeSpotImageUploadUrl, {
+
+      const response = await fetch(phpVibesotUploadServerLink, {
         method: "POST",
-        headers: { Authorization: `Bearer ${userToken}` },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
         body: formData,
       });
-      if (response.status === 200) {
+
+      if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setVibeSpotImagePath(data.imagePaths);
         setImageUploaded(true);
-        setServerCode(response.status);
-        // console.log(data.imagePaths[0]);
       } else {
-        setServerCode(response.status);
+        console.error("Upload failed:", response.status);
       }
     } catch (err) {
-      console.log("error_message : ", err.message);
+      console.error("Upload error:", err.message);
     }
   };
 
   //useEffect to synchronize the ui according to data loading
+
   useEffect(() => {
     /**
      * Call the function in useEffect show the updated data

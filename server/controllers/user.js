@@ -14,19 +14,19 @@ export const uploadUserImage = async (req, res) => {
     const imagePath = req.file.path.split("uploads/")[1]; // Extract the relative path
 
     // Update the user's profile with the image path
-    const updateUserData = await User.findByIdAndUpdate(
-      userId,
-      { userPicturePath: imagePath }, // Update the 'profilePicture' field in the user document
-      { new: true, runValidators: true }
-    );
+    // const updateUserData = await User.findByIdAndUpdate(
+    //   userId,
+    //   { userPicturePath: imagePath }, // Update the 'profilePicture' field in the user document
+    //   { new: true, runValidators: true }
+    // );
 
     // If no user is found, return an error
-    if (!updateUserData) {
-      return res.status(404).json({ error_message: "User not found" });
-    }
+    // if (!updateUserData) {
+    //   return res.status(404).json({ error_message: "User not found" });
+    // }
 
     // Respond with the updated user data
-    res.status(200).json(updateUserData);
+    res.status(200).json({ imagePath: imagePath });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error_message: err.message });
@@ -86,11 +86,17 @@ export const updateUserProfile = async (req, res) => {
   try {
     const { userId } = req.params;
     const updatedData = req.body;
-    console.log("request received");
+
+    console.log("request received", updatedData);
     // Update the user in the database
+    // Ensure `userPicturePath` is updated with `updatedData.userImagePath`
+    const updateFields = {
+      ...updatedData,
+      userPicturePath: updatedData.userImagePath,
+    };
     const updateUserData = await User.findByIdAndUpdate(
       userId,
-      updatedData, // The fields to update
+      updateFields, // The fields to update
       { new: true, runValidators: true } // Return the updated user and run any validators
     );
     // Respond with the updated user data

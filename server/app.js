@@ -31,7 +31,15 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "32mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "32mb", extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // Replace with your frontend URL in production
+    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], // Add 'Authorization' here
+    credentials: true, // Allow cookies or credentials if needed
+  })
+);
+app.options("*", cors()); // Handle preflight requests
 
 //making sure server serves /uploads folder as static resource
 app.use(
@@ -178,7 +186,7 @@ app.post(
 app.post(
   "/uploads/vibespot",
   verifyToken,
-  vibespotUpload.array("vibespot-image", 4),
+  vibespotUpload.array("vibespot-image[]", 4),
   uploadVibeSpot
 );
 

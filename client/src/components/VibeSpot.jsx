@@ -8,6 +8,7 @@ import {
   serverPostComment,
   serverLikeVibeSpot,
   serverVisitVibeSpot,
+  phpServerLink,
 } from "../services/apicalls";
 import { setVisibleRightSideBar } from "../features/headerElementReducer";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -29,6 +30,7 @@ import "@splidejs/react-splide/css";
 import { avatar, notFound3 } from "../constants/images";
 import InfoList from "./InfoList";
 import { setCurrentUser } from "../features/loginReducer";
+import { MutatingDots } from "react-loader-spinner";
 
 /**
  * Routing Machine Component by Leaflet-routing-machine
@@ -68,7 +70,7 @@ const RoutingMachine = ({ currentLocation, vibespotLocation }) => {
       //   if (setRouteInfo) {
       //     setRouteInfo({ distance, duration });
       //   }
-      //   console.log(distance, duration);
+      //   // console.log(distance, duration);
       // })
       .addTo(map);
 
@@ -107,6 +109,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
    */
   const [vibespotFound, setVibespotFound] = useState(true);
   const [vibespotInfo, setVibespotInfo] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [showSideBar, setShowSideBar] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likesList, setlikesList] = useState([]);
@@ -159,7 +162,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         setlikesList(data.likes);
         setVisitedByList(data.visitedBy);
         setDate(data.updatedAt);
-
+        setIsLoading(false);
         // Make sure location coordinates exist before setting position
         if (data.location && data.location.coordinates) {
           setVibespotPosition([
@@ -167,13 +170,6 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
             data.location?.coordinates[0], // Longitude
           ]);
         }
-
-        // console.log(
-        //   "VibeSpotPosition : ",
-        //   vibespotPosition[0],
-        //   data.location?.coordinates[1], // Latitude
-        //   data.location?.coordinates[0]
-        // );
 
         //comment initialization
         if (data.comments?.length > 0) {
@@ -199,9 +195,12 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         const data = await response.json();
         // console.log(data);
         setVibespotFound(false);
+        setIsLoading(false);
       }
     } catch (err) {
-      // console.log("error_message : ", err.message);
+      console.error("error_message : ", err.message);
+      setVibespotFound(false);
+      setIsLoading(false);
     }
   };
 
@@ -222,13 +221,13 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
       try {
         // Define the vibespotId and userId (You need to have these available)
         const vibespotId = vibespotInfo._id; // Replace with actual vibespot ID
-        //// console.log(vibespotId);
+        // console.log(vibespotId);
         const userId = userInfo._id; // Replace with actual user ID
-        //// console.log(userId);
+        // console.log(userId);
 
         // API endpoint to post the comment
         const url = `${serverPostComment}/${vibespotId}`;
-        //// console.log(url);
+        // console.log(url);
         // Send the comment to the server
         const response = await fetch(url, {
           method: "POST",
@@ -245,12 +244,12 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         if (response.ok) {
           const updatedVibespot = await response.json();
           setVibespotInfo(updatedVibespot);
-          //// console.log(updatedVibespot);
+          // console.log(updatedVibespot);
           setCommentInput("");
           setCommentSuccess(true);
         }
       } catch (err) {
-        // console.log("error_message : ", err.message);
+        console.error("error_message : ", err.message);
         setCommentError(true);
       }
       // update the comment in the Vibespot
@@ -287,7 +286,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         // console.log("Failed to like the Vibespot, status:", response.status);
       }
     } catch (err) {
-      // console.log("error_message : ", err.message);
+      console.error("error_message : ", err.message);
     }
   };
 
@@ -314,13 +313,10 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
         setVisitedByList(data.visitedBy);
         dispatch(setCurrentUser(data.userInfo));
       } else {
-        console.log(
-          "Failed to set visited the Vibespot, status:",
-          response.status
-        );
+        // console.log("visited the Vibespot, status:",response.status);
       }
     } catch (err) {
-      // console.log("error_message : ", err.message);
+      console.error("error_message : ", err.message);
     }
   };
 
@@ -347,9 +343,7 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
     }
 
     setCommentEnd(commentEnd - 7);
-
     // console.log("Next Loading...");
-
     // console.log("End : ", commentEnd - 7);
   };
 
@@ -412,422 +406,438 @@ const VibeSpot = ({ id, setShowModal, showViewComponent }) => {
       : "#directions_on_new_page";
   //https://www.google.com/maps/dir/28.612894,77.229446/28.4622848,77.053952
   // console.log(mapURL);
-
+  // console.log(vibespotFound);
   return (
     // <div className="onTopDiv">
     //   <div className="backgroundOverlay">
     <div className="vibespotDiv">
-      {!vibespotFound && (
-        <div className="notFoundDiv">
-          <img src={notFound3} alt="Page Not Found" />
-        </div>
-      )}
-      {vibespotFound && (
-        <div className="vibespotDivMain">
-          {/* paste here */}
-          {/* Info Display Starts Here */}
-          <div
-            className={`mainContentBox ${
-              !rightSideVisible ? "stretchMainBox" : ""
-            }`}
-          >
-            <div className="headingDiv">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {showBackButton && (
-                  <IoIosArrowDropleftCircle
-                    style={{
-                      width: "32px",
-                      height: "32px",
-                      marginRight: "10px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      setShowModal(false);
-                    }}
-                  />
-                )}
-                <h1>{vibespotInfo.title}</h1>
-                <div className="ratingDiv">
-                  <div className="star-rating">
-                    {/* Render full stars */}
-                    {"★".repeat(fullStars)}
-
-                    {/* Render half star */}
-                    {halfStar && "☆"}
-
-                    {/* Render empty stars */}
-                    {"☆".repeat(emptyStars)}
-                  </div>
-                  <p>(&nbsp;{rating}&nbsp;)</p>
-                </div>
-              </div>
-
-              <p>
-                <span>
-                  <a href={mapURL} target="blank">
-                    {isLocationPicked ? (
-                      <>Show Directions</>
-                    ) : (
-                      <>Location Permission Required!!</>
-                    )}
-                  </a>
-                </span>
-              </p>
+      {!isLoading ? (
+        <>
+          {!vibespotFound && (
+            <div className="notFoundDiv">
+              <img src={notFound3} alt="Page Not Found" />
             </div>
-
-            <div className="desDiv">
-              <p>{vibespotInfo.description}</p>
-            </div>
-
-            <div className="carouselBox">
-              <Splide
-                className="splideCarouselBox"
-                options={{
-                  rewind: true,
-                  height: "400px",
-                  width: "100%",
-                }}
-                aria-label="My Favorite Images"
-              >
-                {vibespotInfo.vibeSpotImagePath?.map((imagePath, index) => (
-                  <SplideSlide key={index}>
-                    <img
-                      src={vibespotImageUrl + imagePath}
-                      alt={` ${index + 1}`}
-                      onError={(e) => {
-                        e.target.onerror = null; // Prevents looping
-                        e.target.src = notFound3; // Fallback URL for the image
-                      }}
-                    />
-                  </SplideSlide>
-                ))}
-              </Splide>
-              <p
-                style={{
-                  color: "#797979",
-                  fontSize: "10px",
-                  marginTop: "5px",
-                }}
-              >
-                Posted On : {dateOnly}
-              </p>
-            </div>
-
-            <div className="infoDiv desDiv">
-              {vibespotInfo?.category && (
-                <p>
-                  <span>VibeSpot Type</span> <br />
-                  {vibespotInfo.category}
-                </p>
-              )}
-              {vibespotInfo?.best_menu && (
-                <p>
-                  <span>Best Menu</span> <br />
-                  {vibespotInfo.best_menu}
-                </p>
-              )}
-              {vibespotInfo?.recommendation && (
-                <p>
-                  <span>Recommendation</span> <br />
-                  {vibespotInfo.recommendation}
-                </p>
-              )}
-            </div>
-
-            <div className="metaDiv">
-              <div className="userMeta">
-                <img
-                  src={
-                    vibespotInfo.userId?.userPicturePath !== ""
-                      ? userImageUrl + vibespotInfo.userId?.userPicturePath
-                      : avatar
-                  }
-                  alt={vibespotInfo.userId?.firstName}
-                  onError={(e) => {
-                    e.target.onerror = null; // Prevents looping
-                    e.target.src = avatar; // Fallback URL for the image
-                  }}
-                />
-                <p>
-                  {vibespotInfo.userId?.firstName}{" "}
-                  {vibespotInfo.userId?.lastName}
-                </p>
-              </div>
-            </div>
-
-            <hr />
-
-            <div className="actionsDiv">
+          )}
+          {vibespotFound && (
+            <div className="vibespotDivMain">
+              {/* paste here */}
+              {/* Info Display Starts Here */}
               <div
-                className="likeDiv"
-                onClick={() => {
-                  if (isLoggedIn) {
-                    // only work when logged in
-                    toggleLikeVibeSpot();
-                  }
-                }}
+                className={`mainContentBox ${
+                  !rightSideVisible ? "stretchMainBox" : ""
+                }`}
               >
-                {liked && <FaHeart className="heartFill" />}
-                {!liked && <FaRegHeart className="heartLine" />}
-                <p
-                  style={{ color: "#ed3326" }}
-                  onClick={() => {
-                    dispatch(setVisibleRightSideBar(true));
-                    if (showSideBar === false) {
-                      setShowSideBar(!showSideBar);
-                    }
-                    setShowLikedByList(true);
-                    setShowVisitedByList(false);
-                    setShowComment(false);
-                    setShowMap(false);
-                  }}
-                >
-                  Like ({likesList?.length})
-                </p>
-              </div>
+                <div className="headingDiv">
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {showBackButton && (
+                      <IoIosArrowDropleftCircle
+                        style={{
+                          width: "32px",
+                          height: "32px",
+                          marginRight: "10px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setShowModal(false);
+                        }}
+                      />
+                    )}
+                    <h1>{vibespotInfo.title}</h1>
+                    <div className="ratingDiv">
+                      <div className="star-rating">
+                        {/* Render full stars */}
+                        {"★".repeat(fullStars)}
 
-              {!showComment && (
-                <div
-                  className="commentMapDiv"
-                  onClick={() => {
-                    dispatch(setVisibleRightSideBar(true));
-                    setShowComment(true);
-                    setShowMap(false);
-                    setShowSideBar(false);
-                  }}
-                >
-                  <CgComment className="commentLine" />
-                  <p style={{ color: "#570de6" }}>
-                    Comment ({vibespotInfo.comments?.length})
+                        {/* Render half star */}
+                        {halfStar && "☆"}
+
+                        {/* Render empty stars */}
+                        {"☆".repeat(emptyStars)}
+                      </div>
+                      <p>(&nbsp;{rating}&nbsp;)</p>
+                    </div>
+                  </div>
+
+                  <p>
+                    <span>
+                      <a href={mapURL} target="blank">
+                        {isLocationPicked ? (
+                          <>Show Directions</>
+                        ) : (
+                          <>Location Permission Required!!</>
+                        )}
+                      </a>
+                    </span>
                   </p>
                 </div>
-              )}
 
-              {showComment && (
-                <div
-                  className="commentMapDiv"
-                  onClick={() => {
-                    dispatch(setVisibleRightSideBar(true));
-                    setShowMap(true);
-                    setShowComment(false);
-                    setShowSideBar(false);
-                  }}
-                >
-                  <FaRegMap className="commentLine" />
-                  Show Map
+                <div className="desDiv">
+                  <p>{vibespotInfo.description}</p>
                 </div>
-              )}
 
-              <div
-                className="visitedDiv"
-                onClick={() => {
-                  if (isLoggedIn) {
-                    // only work when logged in
-                    toggleVisitVibeSpot();
-                  }
-                }}
-              >
-                {visited && <RiMapPin5Fill className="locationFill" />}
-                {!visited && <RiMapPin5Line className="locationLine" />}
-                <p
-                  style={{ color: "green" }}
-                  onClick={() => {
-                    dispatch(setVisibleRightSideBar(true));
-                    if (showSideBar === false) {
-                      setShowSideBar(!showSideBar);
-                    }
-                    setShowLikedByList(false);
-                    setShowVisitedByList(true);
-                    setShowComment(false);
-                    setShowMap(false);
-                  }}
-                >
-                  Already Visited ({visitedByList?.length})
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* Info Display Ends Here */}
-
-          {/* Liked & Visited By People List display starts here */}
-          {showSideBar && rightSideVisible ? (
-            <div className="commentDiv likevisitedbyDiv">
-              {showLikedByList && (
-                <InfoList
-                  listData={likesList}
-                  placeholder="Search Liked By"
-                  contentHeading="Liked By People : "
-                  isLoggedIn={isLoggedIn}
-                />
-              )}
-
-              {showVisitedByList && (
-                <InfoList
-                  listData={visitedByList}
-                  placeholder="Search Visited By"
-                  contentHeading="Visited By People : "
-                  isLoggedIn={isLoggedIn}
-                />
-              )}
-            </div>
-          ) : (
-            <></>
-          )}
-          {/* Liked & Visited By People List display ends here */}
-
-          {/* Map Container Starts Here */}
-          {showMap && rightSideVisible ? (
-            <MapContainer
-              key={vibespotPosition} // This ensures re-rendering when position changes
-              id="map"
-              center={vibespotPosition}
-              zoom={15}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              {isLocationPicked && (
-                <RoutingMachine
-                  currentLocation={currentPosition}
-                  vibespotLocation={vibespotPosition}
-                />
-              )}
-
-              {!isLocationPicked && (
-                <Marker position={vibespotPosition}>
-                  <Popup>{vibespotInfo.title}</Popup>
-                </Marker>
-              )}
-            </MapContainer>
-          ) : (
-            <></>
-          )}
-          {/* Map Container Ends Here */}
-
-          {/* paste comment here */}
-          {/* Comment Section Start Here */}
-          {showComment && rightSideVisible ? (
-            <div className="commentDiv">
-              {isLoggedIn && (
-                <div className="commentInputBox">
-                  <img
-                    src={
-                      userInfo?.userPicturePath !== ""
-                        ? userImageUrl + userInfo?.userPicturePath
-                        : avatar
-                    }
-                    alt="Comment Profile Pic"
-                    onError={(e) => {
-                      e.target.onerror = null; // Prevents looping
-                      e.target.src = avatar; // Fallback URL for the image
+                <div className="carouselBox">
+                  <Splide
+                    className="splideCarouselBox"
+                    options={{
+                      rewind: true,
+                      height: "400px",
+                      width: "100%",
                     }}
-                  />
-                  <input
-                    value={commentInput}
-                    placeholder="Comment here..."
-                    onChange={(e) => setCommentInput(e.target.value)}
-                  />
-                  <button onClick={() => postComment(commentInput)}>
-                    <GrSend className="postIcon" />
-                  </button>
+                    aria-label="My Favorite Images"
+                  >
+                    {vibespotInfo.vibeSpotImagePath?.map((imagePath, index) => (
+                      <SplideSlide key={index}>
+                        <img
+                          src={phpServerLink + imagePath}
+                          alt={` ${index + 1}`}
+                          onError={(e) => {
+                            e.target.onerror = null; // Prevents looping
+                            e.target.src = notFound3; // Fallback URL for the image
+                          }}
+                        />
+                      </SplideSlide>
+                    ))}
+                  </Splide>
+                  <p
+                    style={{
+                      color: "#797979",
+                      fontSize: "10px",
+                      marginTop: "5px",
+                    }}
+                  >
+                    Posted On : {dateOnly}
+                  </p>
                 </div>
-              )}
-              {/* Comment Messages starts here */}
-              {!isLoggedIn && (
-                <div className="logInMessage">
-                  <span>
-                    <Link to="/auth/sign-in">Sign In</Link>
-                  </span>{" "}
-                  to post comment.
-                </div>
-              )}
-              {commentError && (
-                <div className="logInMessage">
-                  <span>Something</span> went wrong.
-                </div>
-              )}
-              {commentSuccess && (
-                <div className="logInMessage commentMessage">
-                  <span>Comment</span> Posted.
-                </div>
-              )}
-              {/* Comment Messages ends here */}
 
-              <hr />
-
-              {vibespotInfo.comments?.length === 0 && (
-                <div className="logInMessage commentMessage">
-                  <span>Be First One </span>to post Comment.
+                <div className="infoDiv desDiv">
+                  {vibespotInfo?.category && (
+                    <p>
+                      <span>VibeSpot Type</span> <br />
+                      {vibespotInfo.category}
+                    </p>
+                  )}
+                  {vibespotInfo?.best_menu && (
+                    <p>
+                      <span>Best Menu</span> <br />
+                      {vibespotInfo.best_menu}
+                    </p>
+                  )}
+                  {vibespotInfo?.recommendation && (
+                    <p>
+                      <span>Recommendation</span> <br />
+                      {vibespotInfo.recommendation}
+                    </p>
+                  )}
                 </div>
+
+                <div className="metaDiv">
+                  <div className="userMeta">
+                    <img
+                      src={
+                        vibespotInfo.userId?.userPicturePath !== ""
+                          ? phpServerLink + vibespotInfo.userId?.userPicturePath
+                          : avatar
+                      }
+                      alt={vibespotInfo.userId?.firstName}
+                      onError={(e) => {
+                        e.target.onerror = null; // Prevents looping
+                        e.target.src = avatar; // Fallback URL for the image
+                      }}
+                    />
+                    <p>
+                      {vibespotInfo.userId?.firstName}{" "}
+                      {vibespotInfo.userId?.lastName}
+                    </p>
+                  </div>
+                </div>
+
+                <hr />
+
+                <div className="actionsDiv">
+                  <div
+                    className="likeDiv"
+                    onClick={() => {
+                      if (isLoggedIn) {
+                        // only work when logged in
+                        toggleLikeVibeSpot();
+                      }
+                    }}
+                  >
+                    {liked && <FaHeart className="heartFill" />}
+                    {!liked && <FaRegHeart className="heartLine" />}
+                    <p
+                      style={{ color: "#ed3326" }}
+                      onClick={() => {
+                        dispatch(setVisibleRightSideBar(true));
+                        if (showSideBar === false) {
+                          setShowSideBar(!showSideBar);
+                        }
+                        setShowLikedByList(true);
+                        setShowVisitedByList(false);
+                        setShowComment(false);
+                        setShowMap(false);
+                      }}
+                    >
+                      Like ({likesList?.length})
+                    </p>
+                  </div>
+
+                  {!showComment && (
+                    <div
+                      className="commentMapDiv"
+                      onClick={() => {
+                        dispatch(setVisibleRightSideBar(true));
+                        setShowComment(true);
+                        setShowMap(false);
+                        setShowSideBar(false);
+                      }}
+                    >
+                      <CgComment className="commentLine" />
+                      <p style={{ color: "#570de6" }}>
+                        Comment ({vibespotInfo.comments?.length})
+                      </p>
+                    </div>
+                  )}
+
+                  {showComment && (
+                    <div
+                      className="commentMapDiv"
+                      onClick={() => {
+                        dispatch(setVisibleRightSideBar(true));
+                        setShowMap(true);
+                        setShowComment(false);
+                        setShowSideBar(false);
+                      }}
+                    >
+                      <FaRegMap className="commentLine" />
+                      Show Map
+                    </div>
+                  )}
+
+                  <div
+                    className="visitedDiv"
+                    onClick={() => {
+                      if (isLoggedIn) {
+                        // only work when logged in
+                        toggleVisitVibeSpot();
+                      }
+                    }}
+                  >
+                    {visited && <RiMapPin5Fill className="locationFill" />}
+                    {!visited && <RiMapPin5Line className="locationLine" />}
+                    <p
+                      style={{ color: "green" }}
+                      onClick={() => {
+                        dispatch(setVisibleRightSideBar(true));
+                        if (showSideBar === false) {
+                          setShowSideBar(!showSideBar);
+                        }
+                        setShowLikedByList(false);
+                        setShowVisitedByList(true);
+                        setShowComment(false);
+                        setShowMap(false);
+                      }}
+                    >
+                      Already Visited ({visitedByList?.length})
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {/* Info Display Ends Here */}
+
+              {/* Liked & Visited By People List display starts here */}
+              {showSideBar && rightSideVisible ? (
+                <div className="commentDiv likevisitedbyDiv">
+                  {showLikedByList && (
+                    <InfoList
+                      listData={likesList}
+                      placeholder="Search Liked By"
+                      contentHeading="Liked By People : "
+                      isLoggedIn={isLoggedIn}
+                    />
+                  )}
+
+                  {showVisitedByList && (
+                    <InfoList
+                      listData={visitedByList}
+                      placeholder="Search Visited By"
+                      contentHeading="Visited By People : "
+                      isLoggedIn={isLoggedIn}
+                    />
+                  )}
+                </div>
+              ) : (
+                <></>
               )}
-              {vibespotInfo.comments?.length > 0 && (
-                <div className="commentDisplayBox">
-                  <div className="commentList">
-                    {[...vibespotInfo?.comments]
-                      .slice(commentStart, commentEnd)
-                      .reverse()
-                      .map((c, index) => (
-                        <div key={index} className="commentBox">
-                          <div className="comment">
-                            <img
-                              src={
-                                c.userId?.userPicturePath !== ""
-                                  ? userImageUrl + c.userId?.userPicturePath
-                                  : avatar
-                              }
-                              alt={`${c.userId.firstName} ${c.userId.lastName}`}
-                              onError={(e) => {
-                                e.target.onerror = null; // Prevents looping
-                                e.target.src = avatar; // Fallback URL for the image
-                              }}
-                            />
-                            <div className="userMeta">
-                              <h4>{`${c.userId.firstName} ${c.userId.lastName}`}</h4>
-                              <p>@{c.userId.username}</p>
+              {/* Liked & Visited By People List display ends here */}
+
+              {/* Map Container Starts Here */}
+              {showMap && rightSideVisible ? (
+                <MapContainer
+                  key={vibespotPosition} // This ensures re-rendering when position changes
+                  id="map"
+                  center={vibespotPosition}
+                  zoom={15}
+                  scrollWheelZoom={false}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  {isLocationPicked && (
+                    <RoutingMachine
+                      currentLocation={currentPosition}
+                      vibespotLocation={vibespotPosition}
+                    />
+                  )}
+
+                  {!isLocationPicked && (
+                    <Marker position={vibespotPosition}>
+                      <Popup>{vibespotInfo.title}</Popup>
+                    </Marker>
+                  )}
+                </MapContainer>
+              ) : (
+                <></>
+              )}
+              {/* Map Container Ends Here */}
+
+              {/* paste comment here */}
+              {/* Comment Section Start Here */}
+              {showComment && rightSideVisible ? (
+                <div className="commentDiv">
+                  {isLoggedIn && (
+                    <div className="commentInputBox">
+                      <img
+                        src={
+                          userInfo?.userPicturePath !== ""
+                            ? phpServerLink + userInfo?.userPicturePath
+                            : avatar
+                        }
+                        alt="Comment Profile Pic"
+                        onError={(e) => {
+                          e.target.onerror = null; // Prevents looping
+                          e.target.src = avatar; // Fallback URL for the image
+                        }}
+                      />
+                      <input
+                        value={commentInput}
+                        placeholder="Comment here..."
+                        onChange={(e) => setCommentInput(e.target.value)}
+                      />
+                      <button onClick={() => postComment(commentInput)}>
+                        <GrSend className="postIcon" />
+                      </button>
+                    </div>
+                  )}
+                  {/* Comment Messages starts here */}
+                  {!isLoggedIn && (
+                    <div className="logInMessage">
+                      <span>
+                        <Link to="/auth/sign-in">Sign In</Link>
+                      </span>{" "}
+                      to post comment.
+                    </div>
+                  )}
+                  {commentError && (
+                    <div className="logInMessage">
+                      <span>Something</span> went wrong.
+                    </div>
+                  )}
+                  {commentSuccess && (
+                    <div className="logInMessage commentMessage">
+                      <span>Comment</span> Posted.
+                    </div>
+                  )}
+                  {/* Comment Messages ends here */}
+
+                  <hr />
+
+                  {vibespotInfo.comments?.length === 0 && (
+                    <div className="logInMessage commentMessage">
+                      <span>Be First One </span>to post Comment.
+                    </div>
+                  )}
+                  {vibespotInfo.comments?.length > 0 && (
+                    <div className="commentDisplayBox">
+                      <div className="commentList">
+                        {[...vibespotInfo?.comments]
+                          .slice(commentStart, commentEnd)
+                          .reverse()
+                          .map((c, index) => (
+                            <div key={index} className="commentBox">
+                              <div className="comment">
+                                <img
+                                  src={
+                                    c.userId?.userPicturePath !== ""
+                                      ? userImageUrl + c.userId?.userPicturePath
+                                      : avatar
+                                  }
+                                  alt={`${c.userId.firstName} ${c.userId.lastName}`}
+                                  onError={(e) => {
+                                    e.target.onerror = null; // Prevents looping
+                                    e.target.src = avatar; // Fallback URL for the image
+                                  }}
+                                />
+                                <div className="userMeta">
+                                  <h4>{`${c.userId.firstName} ${c.userId.lastName}`}</h4>
+                                  <p>@{c.userId.username}</p>
+                                </div>
+                              </div>
+                              <div className="userComment">
+                                <p>{c.text}</p>
+                              </div>
                             </div>
-                          </div>
-                          <div className="userComment">
-                            <p>{c.text}</p>
+                          ))}
+                      </div>
+                      {/* pagination of comments */}
+                      {vibespotInfo.comments?.length > 6 && (
+                        <div className="arrows">
+                          {/* <hr /> */}
+                          <div className="commentPagination">
+                            {commentEnd < vibespotInfo.comments.length && (
+                              <div
+                                onClick={() => {
+                                  loadPrevious();
+                                }}
+                              >
+                                <MdOutlineArrowBackIos className="paginationIcon" />
+                              </div>
+                            )}
+                            {commentStart !== 0 && (
+                              <div
+                                onClick={() => {
+                                  loadNext();
+                                }}
+                              >
+                                <MdOutlineArrowForwardIos className="paginationIcon" />
+                              </div>
+                            )}
                           </div>
                         </div>
-                      ))}
-                  </div>
-                  {/* pagination of comments */}
-                  {vibespotInfo.comments?.length > 6 && (
-                    <div className="arrows">
-                      {/* <hr /> */}
-                      <div className="commentPagination">
-                        {commentEnd < vibespotInfo.comments.length && (
-                          <div
-                            onClick={() => {
-                              loadPrevious();
-                            }}
-                          >
-                            <MdOutlineArrowBackIos className="paginationIcon" />
-                          </div>
-                        )}
-                        {commentStart !== 0 && (
-                          <div
-                            onClick={() => {
-                              loadNext();
-                            }}
-                          >
-                            <MdOutlineArrowForwardIos className="paginationIcon" />
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
                   )}
                 </div>
+              ) : (
+                <></>
               )}
+              {/* Comment Section Ends Here */}
             </div>
-          ) : (
-            <></>
           )}
-          {/* Comment Section Ends Here */}
-        </div>
+        </>
+      ) : (
+        <MutatingDots
+          visible={true}
+          height="100"
+          width="100"
+          color="#570de6"
+          secondaryColor="#b194e9"
+          radius="12.5"
+          ariaLabel="mutating-dots-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
       )}
     </div>
     //   </div>

@@ -34,7 +34,7 @@ const SignUp = () => {
     try {
       const url = serverCheckUserNameAvailabilityUrl + checkUsername;
       const response = await axios.get(url); // Use axios.get for a GET request
-      console.log("Username Available : ", response.data.isAvailable); // Access the data property
+      // console.log("Username Available : ", response.data.isAvailable); // Access the data property
       setValidUserName(response.data.isAvailable); // Correctly set the value from response
     } catch (error) {
       console.error("error_message : ", error.message);
@@ -49,7 +49,7 @@ const SignUp = () => {
       const url = serverCheckDuplicateEmailUrl + enteredEmail;
       const response = await axios.get(url); //Use axios.get for a GET request
       setIsEmailDuplicate(response.data.isDuplicate);
-      console.log("Duplicate : ", response.data.isDuplicate);
+      // console.log("Duplicate : ", response.data.isDuplicate);
       setIsEmailDuplicate(response.data.isDuplicate);
     } catch (error) {
       console.error("error_message : ", error.message);
@@ -68,12 +68,12 @@ const SignUp = () => {
         body: JSON.stringify(data),
       });
       // Log the server response code
-      console.log("Server Response Code:", response.status);
+      // console.log("Server Response Code:", response.status);
       setServerCode(response.status);
       const received_response = await response.json();
-      console.log(received_response);
+      // console.log(received_response);
     } catch (err) {
-      console.log("error_message :", err.message);
+      console.error("error_message :", err.message);
     }
   };
 

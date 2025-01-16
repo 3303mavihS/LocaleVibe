@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { vibespotImageUrl, userImageUrl } from "../services/apicalls";
+import React from "react";
+import {
+  vibespotImageUrl,
+  userImageUrl,
+  phpServerLink,
+} from "../services/apicalls";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { avatar, notFound3 } from "../constants/images";
 import { CgComment } from "react-icons/cg";
@@ -60,7 +64,7 @@ const VibeSpotPost = ({
         <div
           className="headingDiv title_div"
           onClick={() => {
-            console.log(vibeSpotDetail._id);
+            // console.log(vibeSpotDetail._id);
             setModalVibeSpotId(vibeSpotDetail?._id);
             setShowModal(true);
             setShowViewComponent("map");
@@ -109,7 +113,7 @@ const VibeSpotPost = ({
             {vibeSpotDetail.vibeSpotImagePath?.map((imagePath, index) => (
               <SplideSlide key={index}>
                 <img
-                  src={vibespotImageUrl + imagePath}
+                  src={phpServerLink + imagePath}
                   alt={` ${index + 1}`}
                   onError={(e) => {
                     e.target.onerror = null; // Prevents looping
@@ -135,7 +139,7 @@ const VibeSpotPost = ({
             <img
               src={
                 vibeSpotDetail.userId?.userPicturePath !== ""
-                  ? userImageUrl + vibeSpotDetail.userId?.userPicturePath
+                  ? phpServerLink + vibeSpotDetail.userId?.userPicturePath
                   : avatar
               }
               alt={vibeSpotDetail.userId?.firstName}
@@ -157,7 +161,7 @@ const VibeSpotPost = ({
           <div
             className="likeDiv"
             onClick={() => {
-              console.log(vibeSpotDetail._id);
+              // console.log(vibeSpotDetail._id);
               setModalVibeSpotId(vibeSpotDetail?._id);
               setShowModal(true);
               setShowViewComponent("like");
@@ -171,7 +175,7 @@ const VibeSpotPost = ({
           <div
             className="commentMapDiv"
             onClick={() => {
-              console.log(vibeSpotDetail._id);
+              // console.log(vibeSpotDetail._id);
               setModalVibeSpotId(vibeSpotDetail?._id);
               setShowModal(true);
               setShowViewComponent("comment");
@@ -184,7 +188,7 @@ const VibeSpotPost = ({
           <div
             className="visitedDiv"
             onClick={() => {
-              console.log(vibeSpotDetail._id);
+              // console.log(vibeSpotDetail._id);
               setModalVibeSpotId(vibeSpotDetail?._id);
               setShowModal(true);
               setShowViewComponent("visited");

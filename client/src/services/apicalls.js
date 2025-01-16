@@ -5,14 +5,29 @@
 //website url
 //const mainDomain = "https://localevibe.onrender.com";
 // const mainDomain = "http://localhost:3001";
-const mainDomain = "https://localevibe.onrender.com";
+// const mainDomain = "https://localevibe.onrender.com";
+
+const mainDomain =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3001"
+    : "https://localevibe.onrender.com";
+
+console.log("Main Domain:", mainDomain);
+
 //googlemap query url
 export const googleMapSearchUrl =
   "https://www.google.com/maps/search/?api=1&query=";
 
+export const phpVibesotUploadServerLink =
+  "https://artandway.com/remote-filebox/localvibe_uploads/vibespot-uploads.php";
+export const phpUserUploadServerLink =
+  "https://artandway.com/remote-filebox/localvibe_uploads/user-uploads.php";
+
 //to access the uploaded files
 export const userImageUrl = mainDomain + "/public/uploads/";
 export const vibespotImageUrl = mainDomain + "/public/";
+export const phpServerLink =
+  "https://artandway.com/remote-filebox/localvibe_uploads/";
 
 //available Url Hit
 export const serverCheckUserNameAvailabilityUrl =

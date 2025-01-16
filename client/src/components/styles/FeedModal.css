@@ -1,17 +1,14 @@
 .vibeSpotListMainDiv{
     width:100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
-.randomInfoBoxFixed{
-    width: 35%;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 10px 13px -6px rgba(0,0,0,0.1);
-    height: 83vh;
-    max-height: 83vh;
-    /* position: fixed; */
+.modal{
+    width: 100%;
+    height: 100%;
 }
 .vibeSpotPostListDiv .list{
     

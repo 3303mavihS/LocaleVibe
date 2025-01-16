@@ -28,7 +28,7 @@ const SignIn = ({ redirectURL }) => {
   } = useForm();
 
   const loginSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     //it will pass the user info into the body
     try {
       const response = await fetch(serverSignInUrl, {
@@ -59,7 +59,7 @@ const SignIn = ({ redirectURL }) => {
         }
       }
     } catch (err) {
-      console.log("error_message : ", err.message);
+      console.error("error_message : ", err.message);
     }
   };
 

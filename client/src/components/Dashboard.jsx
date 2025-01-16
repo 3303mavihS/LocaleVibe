@@ -72,7 +72,7 @@ const Dashboard = () => {
         }
       });
     } else {
-      console.log("Geolocation is not supported by this browser.");
+      console.warn("Geolocation is not supported by this browser.");
     }
   };
 

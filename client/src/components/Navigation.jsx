@@ -23,7 +23,7 @@ const Navigation = () => {
       </NavLink>
       <NavLink to="/dashboard/friends">
         <BsPersonCheck className="navIcon" />
-        Friends
+        Friends (Coming Soon...)
       </NavLink>
       <NavLink to="/dashboard/my-vibespots">
         <GrMapLocation className="navIcon" />

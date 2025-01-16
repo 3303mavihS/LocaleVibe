@@ -4,6 +4,8 @@ import "../components/styles/GlobalForm.css";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import {
+  phpServerLink,
+  phpUserUploadServerLink,
   serverCheckUserNameAvailabilityUrl,
   serverProfileSettingUrl,
 } from "../services/apicalls";
@@ -39,7 +41,7 @@ const ProfileSetting = () => {
       try {
         const url = serverCheckUserNameAvailabilityUrl + checkUsername;
         const response = await axios.get(url); // Use axios.get for a GET request
-        console.log("Username Available : ", response.data.isAvailable); // Access the data property
+        // console.log("Username Available : ", response.data.isAvailable); // Access the data property
         setValidUserName(response.data.isAvailable); // Correctly set the value from response
       } catch (error) {
         console.error("error_message : ", error.message);
@@ -51,7 +53,7 @@ const ProfileSetting = () => {
   // submit the user info to create account
   const submitUserInfo = async (data) => {
     //it will pass the user info into the body
-    const bodyData = { ...data, userId };
+    const bodyData = { ...data, userImagePath, userId };
     console.log(bodyData);
     try {
       const url = serverProfileSettingUrl + "/" + userId;
@@ -61,16 +63,16 @@ const ProfileSetting = () => {
           "Content-type": "application/json",
           Authorization: `Bearer ${userToken}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(bodyData),
       });
       // Log the server response code
-      console.log("Server Response Code:", response.status);
+      // console.log("Server Response Code:", response.status);
       setServerCode(response.status);
       const received_response = await response.json();
-      console.log(received_response);
+      // console.log(received_response);
       dispatch(setCurrentUser(received_response));
     } catch (err) {
-      console.log("error_message :", err.message);
+      console.error("error_message :", err.message);
     }
   };
 
@@ -84,12 +86,14 @@ const ProfileSetting = () => {
   const [openModal, setOpenModal] = useState(false);
   const openModalBox = () => {
     setOpenModal(true);
-    console.log("modal open");
+    // console.log("modal open");
   };
 
   const fileUploadRef = useRef(null);
   const [chosenImage, setChosenImage] = useState([]);
-  const [vibeSpotImagePath, setVibeSpotImagePath] = useState([]);
+  const [userImagePath, setUserImagePath] = useState([
+    userInfo?.userPicturePath,
+  ]);
   const [imageSelected, setImageSelected] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
 
@@ -107,18 +111,18 @@ const ProfileSetting = () => {
     // Set image URLs in state
     setChosenImage(imageUrl);
     setImageSelected(true);
-    console.log(imageUrl);
+    // console.log(imageUrl);
   };
 
   const uploadAndUpdateProfilePicture = async () => {
     try {
       const file = fileUploadRef.current.files[0]; // This is a FileList
-
       // Create a new FormData object
       const formData = new FormData();
       formData.append("user-image", file); // Append the file with the correct field name
 
-      const url = serverUserImageUploadUrl + "/" + userId;
+      // const url = serverUserImageUploadUrl + "/" + userId;
+      const url = phpUserUploadServerLink;
       const response = await fetch(url, {
         method: "POST",
         headers: { Authorization: `Bearer ${userToken}` },
@@ -126,13 +130,13 @@ const ProfileSetting = () => {
       });
       if (response.status === 200) {
         const data = await response.json();
-        setVibeSpotImagePath(data.imagePath);
+        setUserImagePath(data.imagePath);
         setImageUploaded(true);
         console.log(data);
-        dispatch(setCurrentUser(data));
+        // dispatch(setCurrentUser(data));
       }
     } catch (err) {
-      console.log("error_message : ", err.message);
+      console.error("error_message : ", err.message);
     }
   };
 
@@ -148,10 +152,14 @@ const ProfileSetting = () => {
               <img
                 src={
                   userInfo && userInfo.userPicturePath
-                    ? userImageUrl + userInfo.userPicturePath
+                    ? phpServerLink + userInfo.userPicturePath
                     : avatar
                 }
                 alt="profile pic"
+                onError={(e) => {
+                  e.target.onerror = null; // Prevents looping
+                  e.target.src = avatar; // Fallback URL for the image
+                }}
               />
               <BiEditAlt className="editProfilePic" />
             </div>
@@ -302,7 +310,13 @@ const ProfileSetting = () => {
                   <p style={{ fontWeight: "700", textAlign: "center" }}>
                     <span>Upload</span> Image Here.
                   </p>
-                  <p style={{ fontSize: "10px", fontWeight: "700" }}>
+                  <p
+                    style={{
+                      fontSize: "10px",
+                      fontWeight: "700",
+                      textAlign: "center",
+                    }}
+                  >
                     <span> (*.png /.jpeg)</span>
                   </p>
                 </div>
@@ -319,10 +333,12 @@ const ProfileSetting = () => {
                       <div
                         onClick={() => {
                           setOpenModal(false);
+                          setChosenImage([]);
                           setServerCode(0);
+                          setImageSelected(false);
                         }}
                       >
-                        Uploaded Successfully !!!
+                        Image Already Uploaded - Click on Update.
                       </div>
                     </>
                   )}
